@@ -15,9 +15,9 @@ An open-chat service w/ some hip, happenin' UI. Our current target use-cse is se
 
 ## Development Steps
 
-- [ ] Baseline features, using EC2 and sqlite.
-- [ ] More features, using AWS services including DynamoDB, Lambda, S3, etc.
-- [ ] Even more features, using the soon-to-be hugely popular open source framework, [AWS Interface](https://github.com/hubaimaster/aws-interface).
+- [ ] v1.0: Baseline features, using EC2 and sqlite.
+- [ ] v2.0: More features, using AWS services including DynamoDB, Lambda, S3, etc.
+- [ ] v3.0: Even more features, using the soon-to-be hugely popular open source framework, [AWS Interface](https://github.com/hubaimaster/aws-interface).
 
 
 ## Motivation
