@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import CommentForm
 from .models import Comment
+from django.urls import reverse
 
 
 def index(request):
@@ -8,9 +9,9 @@ def index(request):
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save()
-            form = None
-    else:
-        form = None
+            return redirect(reverse('index'))
+
+    form = None
     comments = Comment.objects.all()
     return render(request, 'gugugu/index.html', {
         'comments': comments,
