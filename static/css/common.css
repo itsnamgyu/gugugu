@@ -1,0 +1,61 @@
+* :not(.fa) :not(.fab) {
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-weight: 400;
+    word-break: keep-all;
+}
+
+.navbar-transparent {
+    border-width: 0;
+    -webkit-box-shadow: 0 0;
+    box-shadow: 0 0;
+    background-color: rgba(0,0,0,0.0);
+    background-image: -webkit-gradient(linear, 50.00% 0.00%, 50.00% 100.00%, color-stop( 0% , rgba(0,0,0,0.00)),color-stop( 100% , rgba(0,0,0,0.00)));
+    background-image: -webkit-linear-gradient(270deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+    background-image: linear-gradient(180deg,rgba(0,0,0,0.00) 0%,rgba(0,0,0,0.00) 100%);
+}
+
+html {
+    font-size: 12px;
+}
+
+@media (min-width: 576px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 992px) {
+    html {
+        font-size: 17px;
+    }
+}
+
+.vh-25 {
+    height: 25vh;
+}
+
+.vh-50 {
+    height: 50vh;
+}
+
+.vh-75 {
+    height: 75vh;
+}
+
+.vh-100 {
+    height: 100vh;
+}
+
+.font-weight-light {
+    font-weight: 300 !important;
+}
+
+.font-weight-thin {
+    font-weight: 100 !important;
+}
