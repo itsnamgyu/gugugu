@@ -1,13 +1,107 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 {% endblock %}
 
 {% block head %}
+	<link rel="stylesheet" href="{% static 'gugugu/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
 {% endblock %}
 
 {% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background" class="bg-dark"> </canvas>
+	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative text-center">
+		<div class="hero-wrapper w-100 d-flex justify-content-center flex-column">
+			<div class="inner-wrapper mt-auto mb-auto justify-content-center">
+				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
+				<div class="mt-2">
+					<h2 class="font-weight-bold text-white d-inline"> GUGUGU.CO</h2>
+					<span class="align-top d-inline badge mr-3 badge-outline-light text-white ml-2">BETA</span>
+				</div>
+				<p class="text-white font-weight-thin hero-h1 m-0 mt-3 p-0">쫌 쓸맛나는 오픈채팅 서비스.</p>
+				<p class="text-white font-weight-thin hero-h2 m-0 mt-1 p-0">PC, 모바일 어디서든 사용 가능한 오픈채팅!</p>
+				<a href="https://github.com/itsnamgyu/gugugu">
+					<button type="button" class="btn btn-pill btn-dark btn-info my-4">
+						<i class="fab fa-github mr-2"></i>
+						<span> https://github.com/itsnamgyu/gugugu </span>
+					</button>
+				</a>
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-10 col-md-8 text-left">
+							<p class="text-white hero-h3 m-0 p-0 font-weight-thin">현재 활발히 개발 중인 서비스입니다! 지금은 개발자 세미나 Q&A에서 사용되는 것을 타겟으로 잡고 있습니다. 서비스에 관한 아이디어 혹은 피드백 등이 있으시면 아래에 댓글로 달아주시기 바랍니다! 감사합니다!</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10">
+					<div class="card text-left">
+						<form class="card-body" id="feedback-form" action="{% url 'index' %}" method="post">
+							{% csrf_token %}
+							<h4 class="card-title font-weight-bold mt-2">피드백을 남겨요!</h4>
+							{% for field in form %}
+								{% if field.errors %}
+									<div class="alert alert-danger alert-dismissible fade show" role="alert">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true"> ×</span> </button>
+										<i class="fa fa-error"></i>
+										{{ field.label }}: {% for error in field.errors %}{{ error }}{% endfor %}
+									</div>
+								{% endif %}
+							{% endfor %}
+							<div class="form-group mt-4">
+								<input type="text" class="form-control" name="nickname" id="form-nickname" placeholder="닉네임" form="feedback-form" value="{{ form.nickname.value }}">
+							</div>
+							<div class="form-group">
+								<textarea class="form-control" id="form-content" rows="3" placeholder="내용" name="content" form="feedback-form">{{ form.content.value }}</textarea>
+							</div>
+							<div class="w-100 text-right">
+								<button type="submit" id="form-submit" form="feedback-form" class="btn btn-success" data-dismiss="modal">올리기</button>
+								<!--
+								<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-post">올리기</button>
+								<div class="modal fade" id="modal-post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">🤔 마! 자신있나요..?</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">×</span>
+												</button>
+											</div>
+											<div class="modal-body text-left">
+												아직 구현이 안돼서 한번 올리신 피드백은 삭제할 수가 없어요!
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">다시 생각해볼게요...</button>
+												<button type="submit" form="feedback-form" class="btn btn-success" data-dismiss="modal">물론이죠!</button>
+											</div>
+										</div>
+									</div>
+								</div>
+									-->
+							</div>
+						</form>
+					</div>
+					{% for comment in comments %}
+					<div class="card feedback-card text-left mt-5 mb-5">
+						<div class="card-body">
+							<h5 class="card-title font-weight-bold mt-2">By {{ comment.nickname }}</h5>
+							<p class="">{{ comment.content }}!</p>
+						</div>
+					</div>
+					{%  endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
 {% endblock %}
