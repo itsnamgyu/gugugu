@@ -90,7 +90,7 @@
 						</form>
 					</div>
 					{% for comment in comments %}
-					<div class="card feedback-card text-left mt-5 mb-5">
+					<div class="card feedback-card text-left {% if forloop.first %}mt-5{%  else %}mt-3{% endif %} {% if forloop.last %}mb-5{% endif %}">
 						<div class="card-body">
 							<h5 class="card-title font-weight-bold mt-2">By {{ comment.nickname }}</h5>
 							<p class="">{{ comment.content }}!</p>
