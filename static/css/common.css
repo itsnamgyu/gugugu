@@ -59,3 +59,9 @@ html {
 .font-weight-thin {
     font-weight: 100 !important;
 }
+
+@media (max-width: 576px) {
+    .font-weight-thin {
+        font-weight: 300 !important;
+    }
+}

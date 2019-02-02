@@ -16,23 +16,24 @@
 
 
 .index-logo {
-    width: 4.5rem;
+    width: 3rem;
 }
 
 .hero-wrapper {
-    height: 60em;
-    max-height: 75vh;
+    min-height: 75vh;
+    height: 40em;
+    max-height: 560px;
 }
 
 .hero-h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
 .hero-h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 .hero-h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
