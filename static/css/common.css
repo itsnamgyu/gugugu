@@ -61,6 +61,10 @@ html {
 }
 
 @media (max-width: 576px) {
+    .font-weight-light {
+        font-weight: 400 !important;
+    }
+
     .font-weight-thin {
         font-weight: 300 !important;
     }
