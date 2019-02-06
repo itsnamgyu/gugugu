@@ -52,7 +52,7 @@ def room(request, name):
     if member.exists():
         chats = member.retrieve_subsequent_chats()
     else:
-        return redirect(reverse('room-enter', kwargs=dict(name=name)))
+        return render(request, 'gugugu/room-enter.html', dict(room=room))
 
     return render(request, 'gugugu/room.html', dict(room=room))
 
