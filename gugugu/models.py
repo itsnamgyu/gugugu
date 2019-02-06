@@ -51,15 +51,19 @@ class Room(models.Model):
             self.active = True
             return True
 
-    def retrieve_subsequent_chats(self, last_retrieval_time, n=300):
-        # TODO: unoptimized code?
-        return self.message_set.all().filter(date_sent__gt=last_retrieval_time).reverse()[:300].reverse()
-
 
 class Member(models.Model):
     session_key = models.IntegerField(_('Session Key'), unique=True)
     name = models.CharField(max_length=50, null=True, blank=True, validators=[validate_unicode_slug])
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    date_updated = models.DateTimeField(default=timezone.datetime)
+
+    def retrieve_subsequent_chats(self, n=300):
+        # TODO: unoptimized code?
+        return self.message_set.all().filter(date_sent__gt=self.date_updated).reverse()[:300].reverse()
+
+    class Meta:
+        unique_together = ('room', 'name',)
 
 
 class Message(models.Model):
