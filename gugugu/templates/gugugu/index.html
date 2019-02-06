@@ -26,11 +26,11 @@
 				<p class="text-white font-weight-thin hero-h1 m-0 mt-3 p-0">쫌 쓸맛나는 오픈채팅 서비스.</p>
 				<p class="text-white font-weight-thin hero-h2 m-0 mt-1 p-0">PC, 모바일 어디서든 사용 가능한 오픈채팅!</p>
 				<div class="container">
-					<form id="room-form" class="row justify-content-center" action="{% url 'create_room' %}" method="POST">
+					<form id="room-form" class="row justify-content-center" method="POST">
 						{% csrf_token %}
 						<div id="room-url" class="mt-5 col-10 col-md-8 col-lg-6 d-flex ">
 							<h2 id="room-url-prefix" class="font-weight-bold d-inline align-self-baseline mr-2">gugugu.co/</h2>
-							<input id="room-url-input" name="name" required class="form-control font-weight-bold d-inline align-self-baseline" type="text" placeholder="enter-url" value="{{ room_form.name.value }}">
+							<input id="room-url-input" name="name" required class="form-control font-weight-bold d-inline align-self-baseline" type="text" placeholder="enter-url" value="{{ room_form.name.value|default:"" }}">
 						</div>
 					</form>
 					<button id="room-create-button" type="submit" form="hero-form" class="btn btn-lg btn-primary btn-pill mt-4 disabled">방 만들기</button>
@@ -122,6 +122,25 @@
       let prefix = $('#room-url-prefix');
       let button = $('#hero-button');
 
+      function setValid(valid) {
+          if (valid) {
+              console.log('valid');
+              input.addClass('is-valid');
+              prefix.addClass('is-valid');
+              button.removeClass('disabled');
+          } else {
+              console.log('invalid');
+              input.addClass('is-invalid');
+              prefix.addClass('is-invalid');
+              button.addClass('disabled');
+          }
+      }
+
+
+      {% if valid is not None %}
+		      setValid("{{ valid }}" === "True");
+      {% endif %}
+
       input.on('input', function() {
           let name = $(this).val();
 
@@ -142,15 +161,7 @@
                   },
                   dataType: 'json',
                   success: function (data) {
-                      if (data.usable) {
-                          input.addClass('is-valid');
-                          prefix.addClass('is-valid');
-                          button.removeClass('disabled');
-                      } else {
-                          input.addClass('is-invalid');
-                          prefix.addClass('is-invalid');
-                          button.addClass('disabled');
-                      }
+                      setValid(data.usable);
                   }
               });
           }, 250));
