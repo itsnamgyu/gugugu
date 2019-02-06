@@ -56,7 +56,7 @@ class Member(models.Model):
     session_key = models.IntegerField(_('Session Key'), unique=True)
     name = models.CharField(max_length=50, null=True, blank=True, validators=[validate_unicode_slug])
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    date_updated = models.DateTimeField(default=timezone.datetime)
+    date_updated = models.DateTimeField(default=timezone.now)
 
     def retrieve_subsequent_chats(self, n=300):
         # TODO: unoptimized code?
