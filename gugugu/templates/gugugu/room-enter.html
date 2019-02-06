@@ -1,36 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Title</title>
-	{% extends 'base.html' %}
-	{% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-	{% block title %}
-		GUGUGU
-	{% endblock %}
+{% block title %}
+	GUGUGU
+{% endblock %}
 
-	{% block head %}
-		<meta name="description" content="오픈 채팅방에 참여해보세요!">
-		<link rel="stylesheet" href="{% static 'gugugu/css/room.css' %}">
-		<link rel="stylesheet" href="{% static 'css/nav.css' %}">
-	{% endblock %}
+{% block head %}
+	<meta name="description" content="오픈 채팅방에 참여해보세요!">
+	<link rel="stylesheet" href="{% static 'gugugu/css/room.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+{% endblock %}
 
-	{% block body %}
-		{% include 'nav.html' %}
-		<canvas id="canvas-background" class="bg-dark"> </canvas>
-		<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
-	{% endblock %}
+{% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background" class="bg-dark"> </canvas>
+	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative">
+		<div class="hero w-100 d-flex flex-column justify-content-center">
+			<div class="mt-auto mb-auto text-center">
+				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
+				<div class="mt-2">
+					<h5 class="text-white mt-3">채팅방 가입</h5>
+					<h2 class="text-white font-weight-bold">{{ room.name }}</h2>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">새로 오셨군요!</h5>
+					<p class="card-text">채팅방 안에서 사용할 이름을 설정해주세요!</p>
+					{{ member_form.as_p }}
+					<a href="#" class="btn btn-primary">입장!</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
 
-	{% block body_script %}
-		<script src="{% static 'vendor/granim.min.js' %}"></script>
-		<script src="{% static 'gugugu/js/index.js' %}"></script>
+{% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
 
-		<script>
-		</script>
-	{% endblock %}
-</head>
-<body>
-
-</body>
-</html>
+	<script>
+	</script>
+{% endblock %}

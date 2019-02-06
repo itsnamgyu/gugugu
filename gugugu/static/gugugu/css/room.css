@@ -13,3 +13,12 @@
     top: -50vw;
     left: 10vw;
 }
+
+.index-logo {
+    width: 3rem;
+}
+
+.hero {
+    height: 20rem;
+    min-height: 240px;:
+}
