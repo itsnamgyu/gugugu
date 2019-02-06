@@ -14,7 +14,6 @@
     left: 10vw;
 }
 
-
 .index-logo {
     width: 3rem;
 }
@@ -37,3 +36,59 @@
     font-size: 1.2rem;
 }
 
+#room-url-prefix {
+    background: rgba(0, 0, 0, 0) !important;
+    font-size: 1.6em;
+    color: white;
+    box-shadow: 0 5px 11.5px rgba(23,198,113,.1);
+    transition: color 250ms cubic-bezier(.27,.01,.38,1.06),
+    box-shadow 250ms cubic-bezier(.27,.01,.38,1.06),
+    border 250ms cubic-bezier(.27,.01,.38,1.06);
+}
+
+#room-url-prefix.is-invalid {
+    color: #FAA;
+}
+
+#room-url-prefix.is-valid {
+    color: #AFA;
+}
+
+#room-url-input {
+    background: rgba(0, 0, 0, 0) !important;
+    font-size: 1.2em;
+    color: white;
+    font-weight: 500 !important;
+    border: white solid 0.15em;
+    box-shadow: 0 5px 11.5px rgba(23,198,113,.1);
+    transition: color 250ms cubic-bezier(.27,.01,.38,1.06),
+    box-shadow 250ms cubic-bezier(.27,.01,.38,1.06),
+    border 250ms cubic-bezier(.27,.01,.38,1.06);
+
+}
+
+#room-url-input.is-valid {
+    color: #AFA;
+    border: #AFA solid 0.15em;
+}
+
+#room-url-input.is-invalid {
+    color: #FAA;
+    border: #FAA solid 0.15em;
+}
+
+#room-url-input:valid{
+    font-weight: 700 !important;
+}
+
+#room-url-input::placeholder {
+    color: #AAA;
+}
+
+#room-url-input.is-invalid::placeholder {
+    color: #DAA;
+}
+
+#room-url-input.is-valid::placeholder {
+    color: #ADA;
+}
