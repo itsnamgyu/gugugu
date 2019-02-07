@@ -52,27 +52,32 @@ def room(request, name):
     if member.exists():
         member = member.get()
     else:
-        form = MemberForm(request.POST, prefix='member')
-        if form.is_valid():
-            member = form.save(commit=False)
-            if not request.session.session_key:
-                request.session.create()
-            member.session_key = request.session.session_key
-            member.room = room
-            member.save()
+        member = None
+        form = None
+        if request.method == 'POST':
+            form = MemberForm(request.POST, prefix='member')
+            if form.is_valid():
+                member = form.save(commit=False)
+                if not request.session.session_key:
+                    request.session.create()
+                member.session_key = request.session.session_key
+                member.room = room
+                member.save()
         else:
-            return render(request, 'gugugu/room-enter.html', {
-                'room': room,
-                'member_form': form,
-            })
+            form = MemberForm(prefix='member')
 
-    messages = member.retrieve_all_messages()
-
-    return render(request, 'gugugu/room.html', {
-        'room': room,
-        'messages': messages,
-        'member': member,
-    })
+    if member:
+        messages = member.retrieve_all_messages()
+        return render(request, 'gugugu/room.html', {
+            'room': room,
+            'messages': messages,
+            'member': member,
+        })
+    else:
+        return render(request, 'gugugu/room-enter.html', {
+            'room': room,
+            'member_form': form,
+        })
 
 
 def validate_room_name(request):
