@@ -54,7 +54,6 @@ def room(request, name):
     else:
         form = MemberForm(request.POST, prefix='member')
         if form.is_valid():
-            print('valid!')
             member = form.save(commit=False)
             if not request.session.session_key:
                 request.session.create()
@@ -62,17 +61,17 @@ def room(request, name):
             member.room = room
             member.save()
         else:
-            print('novalid!')
             return render(request, 'gugugu/room-enter.html', {
                 'room': room,
                 'member_form': form,
             })
 
-    chats = member.retrieve_subsequent_chats()
+    messages = member.retrieve_subsequent_messages()
 
     return render(request, 'gugugu/room.html', {
         'room': room,
-        'chats': chats,
+        'messages': messages,
+        'member': member,
     })
 
 

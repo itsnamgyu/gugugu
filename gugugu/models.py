@@ -58,7 +58,7 @@ class Member(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_updated = models.DateTimeField(default=timezone.now)
 
-    def retrieve_subsequent_chats(self, n=300):
+    def retrieve_subsequent_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
         return self.message_set.all().filter(date_sent__gt=self.date_updated)
 
@@ -68,6 +68,6 @@ class Member(models.Model):
 
 class Message(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    message = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_sent = models.DateTimeField(_('Date Sent'), auto_now_add=True, editable=False)
     text = models.TextField()
