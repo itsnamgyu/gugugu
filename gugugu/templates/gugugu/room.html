@@ -19,7 +19,6 @@
 	<div class="position-relative">
 		<div class="hero w-100 d-flex flex-column justify-content-center">
 			<div class="mt-auto mb-auto text-center">
-				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
 				<div class="mt-2">
 					<h5 class="text-white mt-3">{{ room.name }}</h5>
 					<h3 class="text-white font-weight-bold">{% trans "Welcome, " %}{{ member.name }}</h3>
@@ -28,21 +27,27 @@
 		</div>
 		<div id="message-wrapper" class="m-3">
 			{% for message in messages %}
-			<div class="card mt-2">
-				<div class="card-body">
-					<h5 class="card-title">{{ message.member.name }}</h5>
-					<p class="card-text">{{ message.text }}</p>
-				</div>
-			</div>
+				{% if message.member.name == member.name %}
+					<div class="card mt-2 p-4 my-message">
+						<h5 class="text-white d-inline-block m-0 font-weight-bold">{{ message.member.name }}</h5>
+						<p class="text-white d-inline-block m-0 mt-2">{{ message.text }}</p>
+					</div>
+				{% else %}
+					<div class="card mt-2 p-4">
+						<h5 class="d-inline-block m-0 font-weight-bold">{{ message.member.name }}</h5>
+						<p class="d-inline-block m-0 mt-2">{{ message.text }}</p>
+					</div>
+				{% endif %}
+
 			{% endfor %}
 		</div>
 	</div>
 	<div id="message-form-wrapper" class="fixed-bottom bg-white">
-			<form id="message" method="post">
-				{% csrf_token %}
-				{{ message_form }}
-				<input id="message-form-submit" type="submit">
-			</form>
+		<form id="message" class="d-flex" method="post">
+			{% csrf_token %}
+			<textarea name="message-text" class="form-control w-100 m-1" rows="2" required="" id="id_message-text"></textarea>
+			<button id="message-form-submit" class="btn btn-primary m-1" type="submit">Send</button>
+		</form>
 	</div>
 {% endblock %}
 

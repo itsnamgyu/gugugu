@@ -22,3 +22,12 @@
     height: 20rem;
     min-height: 240px;:
 }
+
+
+#id_message-text {
+    font-size: 16px;
+}
+
+.my-message {
+    background-color: #56e;
+}
