@@ -51,6 +51,9 @@ class Room(models.Model):
             self.active = True
             return True
 
+    def __str__(self):
+        return self.name
+
 
 class Member(models.Model):
     session_key = models.CharField(_('Session Key'), max_length=255)
@@ -65,9 +68,15 @@ class Member(models.Model):
     class Meta:
         unique_together = ('room', 'name')
 
+    def __str__(self):
+        return self.name
+
 
 class Message(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_sent = models.DateTimeField(_('Date Sent'), auto_now_add=True, editable=False)
     text = models.TextField()
+
+    def __str__(self):
+        return 'Message from {} in {} on {}'.format(self.member.name, self.room.name, self.date_sent.strftime('%x %X'))
