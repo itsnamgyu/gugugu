@@ -67,12 +67,14 @@ class Member(models.Model):
         # TODO: need to limit the number of chats... (but how?)
         messages = list(self.room.message_set.all().filter(date_sent__gt=self.date_updated))
         self.date_updated = timezone.now()
+        self.save()
         return messages
 
     def retrieve_all_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
         messages = list(self.room.message_set.all().filter(date_sent__gt=self.date_joined))
         self.date_updated = timezone.now()
+        self.save()
         return messages
 
     class Meta:
