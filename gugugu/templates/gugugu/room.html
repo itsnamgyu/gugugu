@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
 	GUGUGU
@@ -15,11 +16,25 @@
 	{% include 'nav.html' %}
 	<canvas id="canvas-background" class="bg-dark"> </canvas>
 	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">Card title</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
+	<div class="position-relative">
+		<div class="hero w-100 d-flex flex-column justify-content-center">
+			<div class="mt-auto mb-auto text-center">
+				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
+				<div class="mt-2">
+					<h5 class="text-white mt-3">{{ room.name }}</h5>
+					<h3 class="text-white font-weight-bold">{% trans "Welcome, " %}{{ member.name }}</h3>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			{% for message in messages %}
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">{{ message.member.name }}</h5>
+					<p class="card-text">{{ message.text }}</p>
+				</div>
+			</div>
+			{% endfor %}
 		</div>
 	</div>
 {% endblock %}
