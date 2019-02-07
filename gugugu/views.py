@@ -4,6 +4,7 @@ from .forms import *
 from .models import *
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.utils import timezone
 from django.db.utils import IntegrityError
 
 
@@ -93,6 +94,36 @@ def room(request, name):
             'room': room,
             'member_form': form,
         })
+
+
+def room_ajax(request, pk):
+    room = get_object_or_404(Room, pk=pk)
+    member = get_object_or_404(Member, room=room, session_key=request.session.session_key)
+    room.date_polled = timezone.now()
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST, prefix='message')
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.member = member
+            message.room = room
+            message.save()
+            room.date_updated = timezone.now()
+
+    room.save()
+    messages = member.retrieve_new_messages()
+
+    data = {
+        'messages': []
+    }
+
+    for message in messages:
+        data['messages'].append({
+            'sender': message.member.name,
+            'text': message.text,
+        })
+
+    return JsonResponse(data)
 
 
 def validate_room_name(request):

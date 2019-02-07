@@ -57,11 +57,12 @@
 	<script>
       jQuery(window).ready(function() {
           let formWrapper = $("#message-form-wrapper");
+          let messageWrapper = $("#message-wrapper");
           console.log(formWrapper.height() + 'px');
-          $("#message-wrapper").css('padding-bottom', formWrapper.height() + 'px');
+          messageWrapper.css('padding-bottom', formWrapper.height() + 'px');
 
           formWrapper.change(function() {
-              $("#message-wrapper").css('padding-bottom', formWrapper.height() + 'px');
+              messageWrapper.css('padding-bottom', formWrapper.height() + 'px');
           });
 
           $("#id_message-text").keydown(function(e){
@@ -71,6 +72,29 @@
                   return false;
               }
           });
+
+          setInterval(function(){
+              $.get("{% url 'room_ajax' pk=room.pk %}", function(data, status){
+                  console.log(data);
+                  if( $.isArray(data.messages) && data.messages.length ) {
+                      $.each(data.messages, function(index, value) {
+		                      let content = '';
+		                      if (value.sender === String("{{ member.name }}")) {
+                              content = '<div class="card mt-2 p-4 my-message">' +
+                                  '<h5 class="text-white d-inline-block m-0 font-weight-bold">' + value.sender + '</h5>' +
+                                  '<p class="text-white d-inline-block m-0 mt-2">' + value.text + '</p>' +
+                                  '</div>';
+                          } else {
+                              content = '<div class="card mt-2 p-4">' +
+                                  '<h5 class="d-inline-block m-0 font-weight-bold">' + value.sender + '</h5>' +
+                                  '<p class="d-inline-block m-0 mt-2">' + value.text + '</p>' +
+                                  '</div>';
+                          }
+                          messageWrapper.append(content);
+                      });
+                  }
+              });
+          }, 5000);
       });
 	</script>
 {% endblock %}
