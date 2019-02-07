@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.utils.translation import ugettext as _
-from django.core.validators import validate_slug, validate_unicode_slug
+from django.core.validators import validate_slug
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
 
@@ -57,7 +58,7 @@ class Room(models.Model):
 
 class Member(models.Model):
     session_key = models.CharField(_('Session Key'), max_length=255)
-    name = models.CharField(max_length=50, null=True, blank=False, validators=[validate_unicode_slug])
+    name = models.CharField(max_length=32, null=True, blank=False, validators=[UnicodeUsernameValidator])
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_updated = models.DateTimeField(default=timezone.now)
     date_joined = models.DateTimeField(default=timezone.now)
