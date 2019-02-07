@@ -50,11 +50,30 @@ def room(request, name):
     member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
 
     if member.exists():
-        chats = member.retrieve_subsequent_chats()
+        member = member.get()
     else:
-        return render(request, 'gugugu/room-enter.html', dict(room=room))
+        form = MemberForm(request.POST, prefix='member')
+        if form.is_valid():
+            print('valid!')
+            member = form.save(commit=False)
+            if not request.session.session_key:
+                request.session.create()
+            member.session_key = request.session.session_key
+            member.room = room
+            member.save()
+        else:
+            print('novalid!')
+            return render(request, 'gugugu/room-enter.html', {
+                'room': room,
+                'member_form': form,
+            })
 
-    return render(request, 'gugugu/room.html', dict(room=room))
+    chats = member.retrieve_subsequent_chats()
+
+    return render(request, 'gugugu/room.html', {
+        'room': room,
+        'chats': chats,
+    })
 
 
 def validate_room_name(request):

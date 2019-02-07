@@ -30,8 +30,11 @@
 				<div class="card-body">
 					<h5 class="card-title">새로 오셨군요!</h5>
 					<p class="card-text">채팅방 안에서 사용할 이름을 설정해주세요!</p>
-					{{ member_form.as_p }}
-					<a href="#" class="btn btn-primary">입장!</a>
+					<form id="member_form" method="post">
+						{% csrf_token %}
+						{{ member_form }}
+					</form>
+					<button type="submit" form="member_form" class="btn btn-primary">입장!</button>
 				</div>
 			</div>
 		</div>
