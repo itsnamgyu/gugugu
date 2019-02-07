@@ -46,7 +46,6 @@ def index(request):
 
 
 def room(request, name):
-    global message_form
     room = get_object_or_404(Room, name=name, active=True)
     member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
     message_form = MessageForm(prefix='message')
@@ -62,7 +61,6 @@ def room(request, name):
                 message.member = member
                 message.room = room
                 message.save()
-                message_form = MessageForm(prefix='message')
                 return redirect(reverse('room', kwargs={
                     'name': name,
                 }))
