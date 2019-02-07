@@ -66,7 +66,7 @@ def room(request, name):
                 'member_form': form,
             })
 
-    messages = member.retrieve_subsequent_messages()
+    messages = member.retrieve_all_messages()
 
     return render(request, 'gugugu/room.html', {
         'room': room,

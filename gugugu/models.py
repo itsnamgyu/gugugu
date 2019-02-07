@@ -60,10 +60,19 @@ class Member(models.Model):
     name = models.CharField(max_length=50, null=True, blank=False, validators=[validate_unicode_slug])
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_updated = models.DateTimeField(default=timezone.now)
+    date_joined = models.DateTimeField(default=timezone.now)
 
-    def retrieve_subsequent_messages(self, n=300):
+    def retrieve_new_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
-        return self.message_set.all().filter(date_sent__gt=self.date_updated)
+        messages = list(self.room.message_set.all().filter(date_sent__gt=self.date_updated))
+        self.date_updated = timezone.now()
+        return messages
+
+    def retrieve_all_messages(self, n=300):
+        # TODO: need to limit the number of chats... (but how?)
+        messages = list(self.room.message_set.all().filter(date_sent__gt=self.date_joined))
+        self.date_updated = timezone.now()
+        return messages
 
     class Meta:
         unique_together = ('room', 'name')
