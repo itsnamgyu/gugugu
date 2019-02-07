@@ -18,3 +18,9 @@ class MemberForm(forms.ModelForm):
     class Meta:
         model = models.Member
         fields = ['name']
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = models.Message
+        fields = ['text']

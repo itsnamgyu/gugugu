@@ -46,25 +46,41 @@ def index(request):
 
 
 def room(request, name):
+    global message_form
     room = get_object_or_404(Room, name=name, active=True)
     member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
+    message_form = MessageForm(prefix='message')
+    form = MemberForm(prefix='member')
 
     if member.exists():
         member = member.get()
+        if request.method == 'POST':
+            # TODO: this should be AJAX
+            message_form = MessageForm(request.POST, prefix='message')
+            if message_form.is_valid():
+                message = message_form.save(commit=False)
+                message.member = member
+                message.room = room
+                message.save()
+                message_form = MessageForm(prefix='message')
+                return redirect(reverse('room', kwargs={
+                    'name': name,
+                }))
     else:
         member = None
-        form = None
         if request.method == 'POST':
             form = MemberForm(request.POST, prefix='member')
             if form.is_valid():
                 member = form.save(commit=False)
                 if not request.session.session_key:
                     request.session.create()
+                # TODO: better way to process this in the Model layer?
                 member.session_key = request.session.session_key
                 member.room = room
                 member.save()
-        else:
-            form = MemberForm(prefix='member')
+                return redirect(reverse('room', kwargs={
+                    'name': name,
+                }))
 
     if member:
         messages = member.retrieve_all_messages()
@@ -72,6 +88,7 @@ def room(request, name):
             'room': room,
             'messages': messages,
             'member': member,
+            'message_form': message_form,
         })
     else:
         return render(request, 'gugugu/room-enter.html', {
