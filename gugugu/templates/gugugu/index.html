@@ -120,16 +120,14 @@
 	<script>
       let input = $('#room-url-input');
       let prefix = $('#room-url-prefix');
-      let button = $('#hero-button');
+      let button = $('#room-create-button');
 
       function setValid(valid) {
           if (valid) {
-              console.log('valid');
               input.addClass('is-valid');
               prefix.addClass('is-valid');
               button.removeClass('disabled');
           } else {
-              console.log('invalid');
               input.addClass('is-invalid');
               prefix.addClass('is-invalid');
               button.addClass('disabled');
