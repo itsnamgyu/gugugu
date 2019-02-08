@@ -21,9 +21,9 @@
 			<div class="mt-auto mb-auto text-center">
 				<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
 				<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
-				<p class="text-white m-0 mt-5">Issues?</p>
+				<p class="text-white m-0 mt-4">Issues?</p>
 				<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
-					<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2 mb-5">
+					<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
 						<i class="fab fa-github mr-2 text-white"></i>
 						<span> https://github.com/itsnamgyu/gugugu/issues </span>
 					</button>
@@ -31,31 +31,33 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="card p-2">
-				<form id="message-form" class="d-flex" method="post">
-					{% csrf_token %}
-					<textarea name="message-text" rows="1" required="" id="id_message-text" class="form-control font-default" placeholder="{% trans 'Enter Message' %}"></textarea>
-					<button id="message-form-submit" class="btn btn-primary ml-2 font-weight-bold font-default" type="submit">Send</button>
-				</form>
-			</div>
-			<div id="message-wrapper" class="my-3">
-				{% for message in messages %}
-					{% if message.member.name == member.name %}
-						<div class="card mt-2 px-4 py-3 my-message">
-							<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-							<p class="text-white d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
-						</div>
-					{% else %}
-						<div class="card mt-2 px-4 py-3">
-							<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-							<p class="d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
-						</div>
-					{% endif %}
-
-				{% endfor %}
+			<div class="row justify-content-center">
+				<div class="col-md-9">
+					<div class="card p-2">
+						<form id="message-form" class="d-flex" method="post">
+							{% csrf_token %}
+							<textarea name="message-text" rows="1" required="" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
+							<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
+						</form>
+					</div>
+					<div id="message-wrapper" class="mx-1 my-4">
+						{% for message in messages %}
+							{% if message.member.name == member.name %}
+								<div class="card mt-2 px-4 py-3 my-message">
+									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+								</div>
+							{% else %}
+								<div class="card mt-2 px-4 py-3">
+									<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+									<p class="d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 {% endblock %}
 
 {% block body_script %}
@@ -88,12 +90,12 @@
                       if (value.sender === String("{{ member.name }}")) {
                           content = '<div class="card mt-2 px-4 py-3 my-message">' +
                               '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
-                              '<p class="text-white d-inline-block m-0 mt-1 message-text font-default">' + ho.escape(value.text) + '</p>' +
+                              '<p class="text-white d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '</div>';
                       } else {
                           content = '<div class="card mt-2 px-4 py-3">' +
                               '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
-                              '<p class="d-inline-block m-0 mt-1 message-text font-default">' + ho.escape(value.text) + '</p>' +
+                              '<p class="d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '</div>';
                       }
                       messageWrapper.prepend(content);

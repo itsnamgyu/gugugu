@@ -24,7 +24,7 @@
 }
 
 .hero {
-    height: 20rem;
+    height: 24rem;
     min-height: 240px;:
 }
 
@@ -33,7 +33,13 @@
 }
 
 #id_message-text {
-    font-size: 16px;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    border: none;
+}
+
+#message-form-submit {
+    font-size: 1.25rem;
 }
 
 .my-message {
@@ -45,7 +51,7 @@
 }
 
 .message-text {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
