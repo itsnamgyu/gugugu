@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
 	GUGUGU
@@ -18,11 +19,8 @@
 	<div class="position-relative">
 		<div class="hero w-100 d-flex flex-column justify-content-center">
 			<div class="mt-auto mb-auto text-center">
-				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
-				<div class="mt-2">
-					<h5 class="text-white mt-3">채팅방 가입</h5>
-					<h2 class="text-white font-weight-bold">{{ room.name }}</h2>
-				</div>
+				<h5 class="text-white mt-3">{% trans 'Welcome to,' %}</h5>
+				<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
 			</div>
 		</div>
 		<div class="container">
@@ -32,9 +30,9 @@
 					<p class="card-text">채팅방 안에서 사용할 이름을 설정해주세요!</p>
 					<form id="member_form" method="post">
 						{% csrf_token %}
-						{{ member_form }}
+						<input type="text" name="member-name" class="form-control w-100 t-16" maxlength="32" required="" id="id_member-name" placeholder="{% trans 'Enter a username' %}">
 					</form>
-					<button type="submit" form="member_form" class="btn btn-primary">입장!</button>
+					<button type="submit" form="member_form" class="btn btn-primary mt-2">입장하기</button>
 				</div>
 			</div>
 		</div>

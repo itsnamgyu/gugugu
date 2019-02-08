@@ -23,6 +23,10 @@ html {
     word-break: keep-all;
 }
 
+.t-16 {
+    font-size: 16px;
+}
+
 @media (min-width: 576px) {
     html {
         font-size: 15px;
@@ -32,6 +36,10 @@ html {
 @media (min-width: 768px) {
     html {
         font-size: 16px;
+    }
+
+    .t-16 {
+        font-size: 1rem;
     }
 }
 
