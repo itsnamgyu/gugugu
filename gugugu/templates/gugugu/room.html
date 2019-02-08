@@ -20,34 +20,36 @@
 		<div class="hero w-100 d-flex flex-column justify-content-center">
 			<div class="mt-auto mb-auto text-center">
 				<div class="mt-2">
-					<h5 class="text-white mt-3">{{ room.name }}</h5>
-					<h3 class="text-white font-weight-bold">{% trans "Welcome, " %}{{ member.name }}</h3>
+					<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
+					<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
 				</div>
 			</div>
 		</div>
-		<div id="message-wrapper" class="m-3">
-			{% for message in messages %}
-				{% if message.member.name == member.name %}
-					<div class="card mt-2 px-4 py-3 my-message">
-						<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-						<p class="text-white d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
-					</div>
-				{% else %}
-					<div class="card mt-2 px-4 py-3">
-						<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-						<p class="d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
-					</div>
-				{% endif %}
+		<div class="container">
+			<div class="card p-2">
+				<form id="message-form" class="d-flex" method="post">
+					{% csrf_token %}
+					<textarea name="message-text" rows="1" required="" id="id_message-text" class="form-control font-default" placeholder="{% trans 'Enter Message' %}"></textarea>
+					<button id="message-form-submit" class="btn btn-primary ml-2 font-weight-bold font-default" type="submit">Send</button>
+				</form>
+			</div>
+			<div id="message-wrapper" class="my-3">
+				{% for message in messages %}
+					{% if message.member.name == member.name %}
+						<div class="card mt-2 px-4 py-3 my-message">
+							<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+							<p class="text-white d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
+						</div>
+					{% else %}
+						<div class="card mt-2 px-4 py-3">
+							<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+							<p class="d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
+						</div>
+					{% endif %}
 
-			{% endfor %}
+				{% endfor %}
+			</div>
 		</div>
-	</div>
-	<div id="message-form-wrapper" class="fixed-bottom bg-white">
-		<form id="message-form" class="d-flex" method="post">
-			{% csrf_token %}
-			<input name="message-text" class="form-control w-100 m-1 font-default" required="" id="id_message-text" placeholder="{% trans 'Enter message' %}">
-			<button id="message-form-submit" class="btn btn-primary m-1 font-weight-bold font-default" type="submit">Send</button>
-		</form>
 	</div>
 {% endblock %}
 
@@ -75,11 +77,6 @@
           });
 
           function update_messages(data, status) {
-              let bottom = false;
-              if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-                  bottom = true;
-              }
-
               if( $.isArray(data.messages) && data.messages.length ) {
                   $.each(data.messages, function(index, value) {
                       let content = '';
@@ -94,12 +91,8 @@
                               '<p class="d-inline-block m-0 mt-1 message-text font-default">' + value.text + '</p>' +
                               '</div>';
                       }
-                      messageWrapper.append(content);
+                      messageWrapper.prepend(content);
                   });
-              }
-
-              if (bottom) {
-                  $('html, body').scrollTop( $(document).height() );
               }
           }
 
@@ -115,9 +108,31 @@
               return false;
           });
 
-          setInterval(function(){
-              $.get("{% url 'room_ajax' pk=room.pk %}", update_messages);
-          }, 300);
+          const wait = 250;
+          let fetchMessages;
+          let fetches = 0;
+		      (fetchMessages = function() {
+		          let time = new Date().getTime();
+              $.get("{% url 'room_ajax' pk=room.pk %}", function(data, status) {
+                  fetches += 1;
+                  update_messages(data, status);
+                  const elapsed = new Date().getTime() - time;
+                  if (elapsed > wait) {
+                      fetchMessages();
+                  } else {
+                      timeout = setTimeout(fetchMessages, wait);
+                  }
+              });
+          });
+
+		      let timeout = setTimeout(fetchMessages, wait);
+		      setInterval(function() {
+		          if (fetches === 0) {
+                  clearTimeout(timeout);
+                  timeout = setTimeout(fetchMessages, wait);
+		          }
+		          fetches = 0;
+		      }, 2000);
       });
 	</script>
 {% endblock %}

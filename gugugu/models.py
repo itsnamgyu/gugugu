@@ -70,7 +70,7 @@ class Member(models.Model):
             end = timezone.now()
             Member.objects.filter(pk=self.pk).update(date_updated=end)
         messages = list(self.room.message_set.all().filter(
-            date_sent__gt=start, date_sent__lt=end))
+            date_sent__gt=start, date_sent__lt=end).reverse())
 
         return messages
 
@@ -79,7 +79,7 @@ class Member(models.Model):
         self.date_updated = timezone.now()
         self.save()
         messages = list(self.room.message_set.all().filter(
-            date_sent__gt=self.date_joined, date_sent__lt=self.date_updated))
+            date_sent__gt=self.date_joined, date_sent__lt=self.date_updated).reverse()[:300])
         return messages
 
     class Meta:
