@@ -65,19 +65,21 @@ class Member(models.Model):
 
     def retrieve_new_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
-        start = self.date_updated
-        end = timezone.now()
-        messages = list(self.room.message_set.all().filter(date_sent__gt=start, date_sent__lt=end))
-        self.date_updated = end
-        self.save()
+        with transaction.atomic():
+            start = Member.objects.select_for_update().get(pk=self.pk).date_updated
+            end = timezone.now()
+            Member.objects.filter(pk=self.pk).update(date_updated=end)
+        messages = list(self.room.message_set.all().filter(
+            date_sent__gt=start, date_sent__lt=end))
+
         return messages
 
     def retrieve_all_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
-        end = timezone.now()
-        messages = list(self.room.message_set.all().filter(date_sent__gt=self.date_joined, date_sent__lt=end))
-        self.date_updated = end
+        self.date_updated = timezone.now()
         self.save()
+        messages = list(self.room.message_set.all().filter(
+            date_sent__gt=self.date_joined, date_sent__lt=self.date_updated))
         return messages
 
     class Meta:
