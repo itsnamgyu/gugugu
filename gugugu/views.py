@@ -82,7 +82,7 @@ def room(request, name):
                 }))
 
     if member:
-        messages = member.retrieve_all_messages()
+        messages = member.retrieve_all_messages()[::-1]  # TODO: for some reason?
         return render(request, 'gugugu/room.html', {
             'room': room,
             'messages': messages,
