@@ -80,13 +80,13 @@
                       let content = '';
                       if (value.sender === String("{{ member.name }}")) {
                           content = '<div class="card mt-2 px-4 py-3 my-message">' +
-                              '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + value.sender + '</h5>' +
-                              '<p class="text-white d-inline-block m-0 mt-1 message-text font-default">' + value.text + '</p>' +
+                              '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
+                              '<p class="text-white d-inline-block m-0 mt-1 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '</div>';
                       } else {
                           content = '<div class="card mt-2 px-4 py-3">' +
-                              '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + value.sender + '</h5>' +
-                              '<p class="d-inline-block m-0 mt-1 message-text font-default">' + value.text + '</p>' +
+                              '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
+                              '<p class="d-inline-block m-0 mt-1 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '</div>';
                       }
                       messageWrapper.prepend(content);
