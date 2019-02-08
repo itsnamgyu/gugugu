@@ -1,7 +1,9 @@
-* :not(.fa) :not(.fab) {
+* :not(.fa) :not(.fab) :not(.font-default) {
     font-family: "Noto Sans KR", sans-serif !important;
-    font-weight: 400;
-    word-break: keep-all;
+}
+
+.font-default {
+    font-family: sans-serif !important;
 }
 
 .navbar-transparent {
@@ -16,6 +18,8 @@
 
 html {
     font-size: 13px;
+    word-break: keep-all;
+    font-weight: 400;
 }
 
 @media (min-width: 576px) {
