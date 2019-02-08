@@ -28,14 +28,14 @@
 		<div id="message-wrapper" class="m-3">
 			{% for message in messages %}
 				{% if message.member.name == member.name %}
-					<div class="card mt-2 p-4 my-message">
-						<h5 class="text-white d-inline-block m-0 font-weight-bold">{{ message.member.name }}</h5>
-						<p class="text-white d-inline-block m-0 mt-2">{{ message.text }}</p>
+					<div class="card mt-2 px-4 py-3 my-message">
+						<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+						<p class="text-white d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
 					</div>
 				{% else %}
-					<div class="card mt-2 p-4">
-						<h5 class="d-inline-block m-0 font-weight-bold">{{ message.member.name }}</h5>
-						<p class="d-inline-block m-0 mt-2">{{ message.text }}</p>
+					<div class="card mt-2 px-4 py-3">
+						<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+						<p class="d-inline-block m-0 mt-1 message-text font-default">{{ message.text }}</p>
 					</div>
 				{% endif %}
 
@@ -43,58 +43,81 @@
 		</div>
 	</div>
 	<div id="message-form-wrapper" class="fixed-bottom bg-white">
-		<form id="message" class="d-flex" method="post">
+		<form id="message-form" class="d-flex" method="post">
 			{% csrf_token %}
-			<textarea name="message-text" class="form-control w-100 m-1" rows="2" required="" id="id_message-text"></textarea>
-			<button id="message-form-submit" class="btn btn-primary m-1" type="submit">Send</button>
+			<input name="message-text" class="form-control w-100 m-1 font-default" required="" id="id_message-text" placeholder="{% trans 'Enter message' %}">
+			<button id="message-form-submit" class="btn btn-primary m-1 font-weight-bold font-default" type="submit">Send</button>
 		</form>
 	</div>
 {% endblock %}
 
 {% block body_script %}
-	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<!--<script src="{% static 'vendor/granim.min.js' %}"></script>-->
 	<script src="{% static 'gugugu/js/index.js' %}"></script>
 	<script>
       jQuery(window).ready(function() {
-          let formWrapper = $("#message-form-wrapper");
-          let messageWrapper = $("#message-wrapper");
-          console.log(formWrapper.height() + 'px');
-          messageWrapper.css('padding-bottom', formWrapper.height() + 'px');
+          const formWrapper = $("#message-form-wrapper");
+          const messageWrapper = $("#message-wrapper");
+          const messageForm = $("#message-form");
+          const messageText = $("#id_message-text");
 
-          formWrapper.change(function() {
-              messageWrapper.css('padding-bottom', formWrapper.height() + 'px');
-          });
+          messageText.focus();
+          messageText.click();
 
-          $("#id_message-text").keydown(function(e){
+          messageWrapper.css('padding-bottom', messageForm.height() + 'px');
+
+          messageText.keydown(function(e) {
               if (e.keyCode === 13 && !e.shiftKey && !e.ctrlKey && !e.altKey) {
                   e.preventDefault();
-                  $("#message-form-submit").click()
+                  $("#message-form-submit").click();
                   return false;
               }
           });
 
-          setInterval(function(){
-              $.get("{% url 'room_ajax' pk=room.pk %}", function(data, status){
-                  console.log(data);
-                  if( $.isArray(data.messages) && data.messages.length ) {
-                      $.each(data.messages, function(index, value) {
-		                      let content = '';
-		                      if (value.sender === String("{{ member.name }}")) {
-                              content = '<div class="card mt-2 p-4 my-message">' +
-                                  '<h5 class="text-white d-inline-block m-0 font-weight-bold">' + value.sender + '</h5>' +
-                                  '<p class="text-white d-inline-block m-0 mt-2">' + value.text + '</p>' +
-                                  '</div>';
-                          } else {
-                              content = '<div class="card mt-2 p-4">' +
-                                  '<h5 class="d-inline-block m-0 font-weight-bold">' + value.sender + '</h5>' +
-                                  '<p class="d-inline-block m-0 mt-2">' + value.text + '</p>' +
-                                  '</div>';
-                          }
-                          messageWrapper.append(content);
-                      });
-                  }
+          function update_messages(data, status) {
+              let bottom = false;
+              if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                  bottom = true;
+              }
+
+              if( $.isArray(data.messages) && data.messages.length ) {
+                  $.each(data.messages, function(index, value) {
+                      let content = '';
+                      if (value.sender === String("{{ member.name }}")) {
+                          content = '<div class="card mt-2 px-4 py-3 my-message">' +
+                              '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + value.sender + '</h5>' +
+                              '<p class="text-white d-inline-block m-0 mt-1 message-text font-default">' + value.text + '</p>' +
+                              '</div>';
+                      } else {
+                          content = '<div class="card mt-2 px-4 py-3">' +
+                              '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + value.sender + '</h5>' +
+                              '<p class="d-inline-block m-0 mt-1 message-text font-default">' + value.text + '</p>' +
+                              '</div>';
+                      }
+                      messageWrapper.append(content);
+                  });
+              }
+
+              if (bottom) {
+                  $('html, body').scrollTop( $(document).height() );
+              }
+          }
+
+          messageForm.submit(function(event) {
+              event.preventDefault();
+              $.ajax({
+                  type: "POST",
+                  url: "{% url 'room_ajax' pk=room.pk %}",
+                  data: messageForm.serialize(),
+                  success: update_messages,
               });
-          }, 5000);
+              messageForm[0].reset();
+              return false;
+          });
+
+          setInterval(function(){
+              $.get("{% url 'room_ajax' pk=room.pk %}", update_messages);
+          }, 300);
       });
 	</script>
 {% endblock %}
