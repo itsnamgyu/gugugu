@@ -1,4 +1,4 @@
-* :not(.fa) :not(.fab) :not(.font-default) {
+* :not(.fa):not(.fab):not(.font-default) {
     font-family: "Noto Sans KR", sans-serif !important;
     font-weight: 400;
 }
