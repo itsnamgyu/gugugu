@@ -36,7 +36,7 @@ def index(request):
             else:
                 new.delete()
 
-    comments = Comment.objects.all().reverse()
+    comments = Comment.objects.all()[::-1]
     return render(request, 'gugugu/index.html', {
         'comments': comments,
         'form': form,
