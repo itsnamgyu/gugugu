@@ -94,7 +94,7 @@ class Message(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_sent = models.DateTimeField(_('Date Sent'), auto_now_add=True, editable=False)
-    text = models.TextField()
+    text = models.TextField(max_length=1024)
 
     def __str__(self):
         return 'Message from {} in {} on {}'.format(self.member.name, self.room.name, self.date_sent.strftime('%x %X'))
