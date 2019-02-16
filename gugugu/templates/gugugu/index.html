@@ -53,7 +53,7 @@
 			</div>
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-10">
-					<div class="card text-left">
+					<div class="card text-left mb-5">
 						<form class="card-body" id="feedback-form" method="post">
 							{% csrf_token %}
 							<h4 class="card-title font-weight-bold mt-2">피드백을 남겨요!</h4>
@@ -78,7 +78,7 @@
 						</form>
 					</div>
 					{% for comment in comments %}
-						<div class="card feedback-card text-left {% if forloop.first %}mt-5{%  else %}mt-3{% endif %} {% if forloop.last %}mb-5{% endif %}">
+						<div class="card feedback-card text-left mt-3 {% if forloop.last %}mb-5{% endif %}">
 							<div class="card-body">
 								<h5 class="card-title font-weight-bold mt-2">By {{ comment.nickname }}</h5>
 								<p class="">{{ comment.content }}!</p>
