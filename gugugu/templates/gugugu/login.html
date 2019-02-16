@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+	GUGUGU - Login
+{% endblock %}
+
+{% block head %}
+	<meta name="description" content="구구구, 쫌 쓸맛나는 오픈채팅 서비스. PC, 모바일 어디서든 사용 가능한 오픈채팅!">
+	<link rel="stylesheet" href="{% static 'gugugu/css/hero.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/background.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+{% endblock %}
+
+{% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background"> </canvas>
+	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative text-center">
+		<div class="hero-wrapper w-100 d-flex justify-content-center flex-column">
+			<div class="inner-wrapper mt-auto mb-auto justify-content-center">
+				<img class="index-logo d-inline-block" src="{% static 'img/logo-bubble.png' %}">
+				<div class="mt-2">
+					<h3 class="font-weight-bold text-white d-inline"> GUGUGU.CO</h3>
+					<span class="align-top d-inline badge mr-3 badge-outline-light text-white ml-2">BETA</span>
+				</div>
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-12 col-md-8 col-lg-6 text-left mt-5">
+							<h3 class="text-white font-weight-bold hero-h1 m-0 p-0">{% trans 'Sign In' %}</h3>
+							<form class="mt-4" id="login-form" method="post">
+								<div class="form-group text-white">
+									<label for="id_username">{% trans 'Email' %}</label>
+									<input class="form-control" type="text" name="username" autofocus="" required="" id="id_username">
+								</div>
+								<div class="form-group text-white">
+									<label for="id_password">{% trans 'Password' %}</label>
+									<input class="form-control" type="password" name="password" required="" id="id_password">
+								</div>
+								<button type="submit" class="btn btn-primary ml-auto">Submit</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
+
+	<script>
+      let input = $('#room-url-input');
+      let prefix = $('#room-url-prefix');
+      let button = $('#room-create-button');
+
+      function setValid(valid) {
+          if (valid) {
+              input.addClass('is-valid');
+              prefix.addClass('is-valid');
+              button.removeClass('disabled');
+          } else {
+              input.addClass('is-invalid');
+              prefix.addClass('is-invalid');
+              button.addClass('disabled');
+          }
+      }
+
+
+      {% if valid is not None %}
+          setValid("{{ valid }}" === "True");
+      {% endif %}
+
+      input.on('input', function() {
+          let name = $(this).val();
+
+          prefix.removeClass('is-valid');
+          input.removeClass('is-valid');
+          prefix.removeClass('is-invalid');
+          input.removeClass('is-invalid');
+          button.addClass('disabled');
+
+          if (name === '') return;
+
+          window.clearTimeout($(this).data("timeout"));
+          $(this).data("timeout", setTimeout(function () {
+              $.ajax({
+                  url: '{{  validate_room_name_url }}',
+                  data: {
+                      'name': name,
+                  },
+                  dataType: 'json',
+                  success: function (data) {
+                      setValid(data.usable);
+                  }
+              });
+          }, 250));
+      });
+	</script>
+{% endblock %}
