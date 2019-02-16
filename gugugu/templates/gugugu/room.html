@@ -167,7 +167,9 @@
                                 '</div>' +
                               '</div>'
                       }
-                      messageWrapper.prepend(content);
+                      $content = $(content);
+                      bindClapEvent($content.find(".clap-btn"));
+                      messageWrapper.prepend($content);
                   });
               }
 
@@ -217,33 +219,36 @@
 		          fetches = 0;
 		      }, 2000);
 
-          $(".clap-btn").click(function(){
-              const messageId = $(this).data("messagePk");
-              const myClapsCountWrapper = $(this);
-              const clapCountWrapper = $(this).parent().siblings().find(".clap-count");
-              event.preventDefault();
-              if (parseInt(myClapsCountWrapper.attr("data-my-claps")) < 50) {
-                  clapCountWrapper.text(parseInt(clapCountWrapper.text()) + 1);
-                  myClapsCountWrapper.attr("data-my-claps", parseInt(myClapsCountWrapper.attr("data-my-claps")) + 1);
-                  if(newClaps["messageId"]) {
-                      newClaps["messageId"] += 1;
-                  } else {
-                      newClaps["messageId"] = 1;
-                      window.setTimeout(function(){
-                          $.ajax({
-                              type: "POST",
-                              // TODO: change below strings to template url...
-                              url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
-                              data: {claps: newClaps["messageId"]},
-                              success: function (msg) {
-                                  delete newClaps["messageId"];
-                              },
-                          });
-                      }, 3000);
+          function bindClapEvent($clapBtn) {
+              $clapBtn.click(function(){
+                  const messageId = $(this).data("messagePk");
+                  const myClapsCountWrapper = $(this);
+                  const clapCountWrapper = $(this).parent().siblings().find(".clap-count");
+                  event.preventDefault();
+                  if (parseInt(myClapsCountWrapper.attr("data-my-claps")) < 50) {
+                      clapCountWrapper.text(parseInt(clapCountWrapper.text()) + 1);
+                      myClapsCountWrapper.attr("data-my-claps", parseInt(myClapsCountWrapper.attr("data-my-claps")) + 1);
+                      if(newClaps["messageId"]) {
+                          newClaps["messageId"] += 1;
+                      } else {
+                          newClaps["messageId"] = 1;
+                          window.setTimeout(function(){
+                              $.ajax({
+                                  type: "POST",
+                                  // TODO: change below strings to template url...
+                                  url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                                  data: {claps: newClaps["messageId"]},
+                                  success: function (msg) {
+                                      delete newClaps["messageId"];
+                                  },
+                              });
+                          }, 3000);
+                      }
                   }
-              }
-              return false;
-          });
+                  return false;
+              });
+          }
+          bindClapEvent($(".clap-btn"));
 
       });
 	</script>
