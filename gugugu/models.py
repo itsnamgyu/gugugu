@@ -137,7 +137,7 @@ class Message(models.Model):
     text = models.TextField(max_length=1024)
 
     claps = models.IntegerField(default=0)
-    date_claps_updated = models.DateTimeField(_('Date Claps Updated'), auto_now_add=True)
+    date_claps_updated = models.DateTimeField(_('Date Claps Updated'), default=timezone.now)
 
     def __str__(self):
         return 'Message from {} in {} on {}'.format(self.member.name, self.room.name, self.date_sent.strftime('%x %X'))
