@@ -2,6 +2,7 @@ from django.db import models, transaction
 from django.utils.translation import ugettext as _
 from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 
@@ -13,13 +14,33 @@ class Comment(models.Model):
 
 
 class Room(models.Model):
+    DEFAULT_DEACTIVATE_DELTA = 12 * 3600
+
     date_created = models.DateTimeField(_('Date Created'), default=timezone.now, editable=False)
     date_polled = models.DateTimeField(_('Date Last Polled'), default=timezone.now)
     date_updated = models.DateTimeField(_('Date Updated'), default=timezone.now)
     date_deactivated = models.DateTimeField(_('Date Deactivated'), default=None, null=True, blank=True)
     active = models.BooleanField(default=False)
     name = models.CharField(max_length=255, validators=[validate_slug])
-    deactivate_delta_sec = models.IntegerField(default=12*3600)
+    deactivate_delta_sec = models.IntegerField(default=DEFAULT_DEACTIVATE_DELTA)
+
+    owner = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True)
+
+    @property
+    def registered(self):
+        return self.owner is not None
+
+    def deactivate_and_return_none(self):
+        self._deactivate()
+        return None
+
+    def _deactivate(self):
+        """
+        Actually deactivates the chat room
+        :return:
+        """
+        self.active = False
+        self.date_deactivated = timezone.now()
 
     def deactivate(self):
         """
@@ -33,8 +54,7 @@ class Room(models.Model):
         delta = timezone.now() - self.date_polled
         delta_sec = delta.days * 43200 + delta.seconds
         if delta_sec > self.deactivate_delta_sec:
-            self.active = False
-            self.date_deactivated = timezone.now()
+            self._deactivate()
             return True
 
     @transaction.atomic
@@ -57,11 +77,27 @@ class Room(models.Model):
 
 
 class Member(models.Model):
-    session_key = models.CharField(_('Session Key'), max_length=255)
+    """
+    Each "user" is assigned one Member for each chatroom.
+
+    When an anonymous user (who are identified by their session keys) enters a Room,
+    a Member object associated with that Room is initialized with their session key.
+    The User object is ignored.
+
+    When a registered user enters a Room, a Member associated with that Room is initialized
+    with their User object. The session key of the currently logged in User is also saved.
+    If the same User enters the Room using a different session key (from a different device),
+    then the previous session is invalidated and the Member's session_key field is updated
+    with the new session key. *Hence, there can't be more than one Member associated with
+    the same room and user at the same time.
+    """
+    session_key = models.CharField(_('Session Key'), max_length=255, null=True)
     name = models.CharField(max_length=32, null=True, blank=False, validators=[UnicodeUsernameValidator])
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_updated = models.DateTimeField(default=timezone.now)
     date_joined = models.DateTimeField(default=timezone.now)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def retrieve_new_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
@@ -84,7 +120,11 @@ class Member(models.Model):
         return messages
 
     class Meta:
-        unique_together = ('room', 'name')
+        unique_together = (('room', 'name'), ('room', 'user'))
+
+    @property
+    def registered(self):
+        return self.user is not None
 
     def __str__(self):
         return self.name
