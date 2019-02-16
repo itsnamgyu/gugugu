@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.models import User
