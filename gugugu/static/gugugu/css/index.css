@@ -1,24 +1,3 @@
-#canvas-background {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    background: #501145; /* Old browsers */
-    background: -moz-linear-gradient(left, #501145 0%, #501145 0%, #c63771 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #501145 0%,#501145 0%,#c63771 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #501145 0%,#501145 0%,#c63771 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#501145', endColorstr='#c63771',GradientType=1 ); /* IE6-9 */
-}
-
-#logo-shadow {
-    position: fixed;
-    width: 100%;
-    top: -50vw;
-    left: 10vw;
-}
-
 .index-logo {
     width: 3rem;
 }
