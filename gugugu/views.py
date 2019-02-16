@@ -117,7 +117,6 @@ def room_ajax(request, pk):
     updated_data = member.retrieve_new_messages()
     messages = updated_data["messages"]
     claps_updated_messages = updated_data["claps_updated_messages"]
-    print(claps_updated_messages)
 
     data = {
         'messages': [],
@@ -128,7 +127,7 @@ def room_ajax(request, pk):
         data['messages'].append({
             'sender': message.member.name,
             'text': message.text,
-            'claps': message.claps,
+            'claps': message.claps.count(),
             'pk': message.pk,
         })
 
@@ -144,11 +143,14 @@ def clap_ajax(request, room_id, message_id):
     room = get_object_or_404(Room, pk=room_id)
     message = get_object_or_404(Message, pk=message_id)
     member = get_object_or_404(Member, room=room, session_key=request.session.session_key)
+    clap_count = request.POST.get('claps')
 
     if request.method == 'POST':
         if Clap.objects.filter(message=message, member=member).count() < 50:
-            clap = Clap(message=message, member=member)
-            clap.save()
+            with transaction.atomic():
+                for i in range(0, int(clap_count)):
+                    clap = Clap(message=message, member=member)
+                    clap.save()
             message.date_claps_updated = timezone.now()
             message.save()
             room.date_updated = timezone.now()
