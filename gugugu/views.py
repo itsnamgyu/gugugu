@@ -122,6 +122,7 @@ def room_ajax(request, pk):
         data['messages'].append({
             'sender': message.member.name,
             'text': message.text,
+            'claps': message.claps,
             'pk': message.pk,
         })
 
