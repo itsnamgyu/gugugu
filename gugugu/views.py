@@ -114,14 +114,23 @@ def room_ajax(request, pk):
     messages = member.retrieve_new_messages()
 
     data = {
-        'messages': []
+        'messages': [],
+        'claps': [],
     }
 
     for message in messages:
         data['messages'].append({
             'sender': message.member.name,
             'text': message.text,
+            'pk': message.pk,
         })
+
+    """
+    data['claps'].append({
+        'message_pk': message.pk,
+        'claps': message.claps,
+    })
+    """
 
     return JsonResponse(data)
 
