@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Comment(models.Model):
@@ -96,5 +97,18 @@ class Message(models.Model):
     date_sent = models.DateTimeField(_('Date Sent'), auto_now_add=True, editable=False)
     text = models.TextField(max_length=1024)
 
+    def get_my_claps_count(self, member_id):
+        member_message_claps = self.claps.filter(member_id=member_id)
+        return member_message_claps.count()
+
     def __str__(self):
         return 'Message from {} in {} on {}'.format(self.member.name, self.room.name, self.date_sent.strftime('%x %X'))
+
+
+class Clap(models.Model):
+    message = models.ForeignKey(Message, related_name='claps', on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, related_name='claps', on_delete=models.CASCADE)
+    date_created = models.DateTimeField(_('Date Created'), default=timezone.now, editable=False)
+
+    def __str__(self):
+        return '{} claped {} message'.format(self.member.name, self.message.text)
