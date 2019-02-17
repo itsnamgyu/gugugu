@@ -23,17 +23,40 @@
 			<div class="inner-wrapper mt-auto mb-auto justify-content-center">
 				<h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3>
 				<h5 class="font-weight-light text-white">진로에 대한 고민이 있는 서강인들을 위한 선배님들의 토크!</h5>
-				<p class="font-weight text-white mt-5">아래 소셜 아이디로 참가 신청하신 후 채팅방을 통해 토크 질문을 미리 다실 수 있습니다!</p>
 				<div class="container mt-2">
-					<div class="row justify-content-center">
-						<div class="col-11 col-md-8 col-lg-6 text-left">
-							<a href="">
-								<button class="btn btn btn-primary btn-pill w-100"><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속</button>
-							</a>
-							<a href="">
-								<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-facebook mr-3"></i>Facebook 아이디로 신청/접속</button>
-							</a>
+					{% if registered %}
+						<p class="font-weight text-white mt-5">신청 완료하셨습니다! 채팅방을 통해 토크 질문을 미리 달아주세요!</p>
+						<div class="row justify-content-center">
+							<div class="col-11 col-md-8 col-lg-6 text-left">
+								<a href="">
+									<button class="btn btn-lg btn-primary btn-pill w-100 disabled">채팅 참가 (준비중)</button>
+								</a>
+							</div>
 						</div>
+					{% else %}
+						{% if user %}
+							<p class="font-weight text-white mt-5">신청을 완료해주세요!</p>
+							<div class="row justify-content-center">
+								<div class="col-11 col-md-8 col-lg-6 text-left">
+									<a href="{% url 'talk_register' %}">
+										<button class="btn btn-lg btn-primary btn-pill w-100">신청하기</button>
+									</a>
+								</div>
+							</div>
+						{% else %}
+							<p class="font-weight text-white mt-5">아래 소셜 아이디로 참가 신청하신 후 채팅방을 통해 토크 질문을 미리 다실 수 있습니다!</p>
+							<div class="row justify-content-center">
+								<div class="col-11 col-md-8 col-lg-6 text-left">
+									<a href="">
+										<button class="btn btn btn-primary btn-pill w-100"><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속</button>
+									</a>
+									<a href="">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-facebook mr-3"></i>Facebook 아이디로 신청/접속</button>
+									</a>
+								</div>
+							</div>
+								{% endif %}
+							{% endif %}
 					</div>
 				</div>
 				<div class="row justify-content-center">

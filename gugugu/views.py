@@ -56,12 +56,15 @@ def talk(request):
     """
 
     registered = False
+    user = None
     if request.user.is_authenticated:
+        user = request.user
         if TalkRegistration.objects.filter(user=request.user).exists():
             registered = True
 
     return render(request, 'gugugu/talk-index.html', {
         'registered': registered,
+        'user': user
     })
 
 
@@ -76,8 +79,9 @@ def talk_register(request):
     if request.method == 'POST':
         form = TalkRegistrationForm(request.POST)
         if form.is_valid():
-            form.user = request.user
-            form.save()
+            registration = form.save(commit=False)
+            registration.user = request.user
+            registration.save()
             return redirect(reverse('talk'))
 
     if form is None:
