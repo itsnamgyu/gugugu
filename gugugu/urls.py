@@ -4,6 +4,7 @@ from allauth.account.views import LoginView, LogoutView, SignupView
 from . import views
 
 urlpatterns = [
+    path('sg-talk', views.talk, name='talk'),
     path('', views.index, name='index'),
     path('gu/ajax/validate-room-name', views.validate_room_name, name='validate_room_name'),
     path('<slug:name>', views.room, name='room'),

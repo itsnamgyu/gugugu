@@ -48,6 +48,15 @@ def index(request):
     })
 
 
+def talk(request):
+    """
+    Custom view for sg seminar event!
+    :param request:
+    :return:
+    """
+    return render(request, 'gugugu/talk-index.html')
+
+
 def room(request, name):
     room = get_object_or_404(Room, name=name, active=True)
     member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
