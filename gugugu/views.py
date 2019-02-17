@@ -164,24 +164,28 @@ def validate_room_name(request):
     form = RoomForm(request.GET)
     error_msg = ''
 
+    reserved = False
+    taken = False
     if form.is_valid():
         name = form.cleaned_data['name']
         room = Room.objects.filter(name=name, active=True)
         if name in ['sg-talk', 'gu']:
             valid = False
-            taken = True
-            error_msg = _('That name is reserved')
+            reserved = True
         else:
             valid = True
             taken = room.exists() and not room.get().deactivate()
     else:
         valid = False
-        taken = False
+        taken = True
 
-    if not valid and not taken:
-        error_msg = form.errors['name'][0]
-    elif taken:
-        error_msg = _('A room with that name has been recently used.')
+    if not valid:
+        if taken:
+            error_msg = _('A room with that name has been recently used.')
+        elif reserved:
+            error_msg = _('That name is reserved')
+        else:
+            error_msg = form.errors['name'][0]
 
     data = {
         'usable': valid and not taken,
