@@ -1,7 +1,13 @@
 {% load static %}
+{% load i18n %}
 <nav class="navbar navbar-light navbar-transparent fixed-top position-absolute">
-    <a class="navbar-brand align-middle d-inline-block font-weight-bold text-white" href="{%  url 'index' %}">
-        <img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block" alt="">
-        GUGUGU.CO
-    </a>
+	<a class="navbar-brand align-middle d-inline-block font-weight-bold text-white" href="{%  url 'index' %}">
+		<img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block" alt="">
+		GUGUGU.CO
+	</a>
+	{% if user.is_authenticated %}
+		<p class="navbar-text text-white">{% trans 'Welcome' %} {{ user.get_username }}</p>
+	{% else %}
+		<a class="navbar-text text-white" href="{% url 'account_login' %}">{%  trans 'Sign In' %}</a>
+	{% endif %}
 </nav>
