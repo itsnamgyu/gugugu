@@ -34,6 +34,7 @@
 							<input id="room-url-input" name="name" required class="form-control font-weight-bold d-inline align-self-baseline" type="text" placeholder="enter-url" value="{{ room_form.name.value|default:"" }}">
 						</div>
 					</form>
+					<div id="room-form-errors" class="invalid-feedback d-block text-white"><br></div>
 					<button id="room-create-button" type="submit" form="room-form" class="btn btn-lg btn-primary btn-pill mt-4 disabled">방 만들기</button>
 				</div>
 			</div>
@@ -119,6 +120,8 @@
 		      setValid("{{ valid }}" === "True");
       {% endif %}
 
+      roomFormErrors = $('#room-form-errors');
+
       input.on('input', function() {
           let name = $(this).val();
 
@@ -140,6 +143,11 @@
                   dataType: 'json',
                   success: function (data) {
                       setValid(data.usable);
+                      if (data.error_msg === "") {
+                          roomFormErrors.html("<br>");
+                      } else {
+                          roomFormErrors.html(data.error_msg);
+                      }
                   }
               });
           }, 250));
