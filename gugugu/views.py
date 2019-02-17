@@ -140,6 +140,7 @@ def room_ajax(request, pk):
 
     return JsonResponse(data)
 
+
 def clap_ajax(request, room_id, message_id):
     room = get_object_or_404(Room, pk=room_id)
     message = get_object_or_404(Message, pk=message_id)
