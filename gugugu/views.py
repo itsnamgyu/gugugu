@@ -28,6 +28,8 @@ def index(request):
         room = Room.objects.filter(name=name, active=True)
         if room.exists() and not room.get().deactivate():
             pass
+        elif name in ['sg-talk', 'gu']:
+            pass
         else:
             new = room_form.save()
             if new.activate():
@@ -156,24 +158,29 @@ def clap_ajax(request, room_id, message_id):
     }
     return JsonResponse(data)
 
+
 def validate_room_name(request):
     form = RoomForm(request.GET)
+    error_msg = ''
+
     if form.is_valid():
         name = form.cleaned_data['name']
         room = Room.objects.filter(name=name, active=True)
-        valid = True
-        taken = room.exists() and not room.get().deactivate()
+        if name in ['sg-talk', 'gu']:
+            valid = False
+            taken = True
+            error_msg = _('That name is reserved')
+        else:
+            valid = True
+            taken = room.exists() and not room.get().deactivate()
     else:
         valid = False
         taken = False
 
-    error_msg = ''
-    if not valid:
+    if not valid and not taken:
         error_msg = form.errors['name'][0]
-
-    else:
-        if not taken:
-            error_msg = _('A room with that name has been recently used.')
+    elif taken:
+        error_msg = _('A room with that name has been recently used.')
 
     data = {
         'usable': valid and not taken,
