@@ -63,7 +63,7 @@
 					<div id="message-wrapper" class="mx-1 my-4">
 						{% for message in messages %}
 							{% if message.member.name == member.name %}
-								<div class="card mt-2 px-4 py-3 my-message" data-message-id="{{ message.id }}">
+								<div class="card mt-2 px-4 py-3 my-message">
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
                                 </div>
@@ -96,7 +96,37 @@
 {% block body_script %}
 	<script src="{% static 'gugugu/js/background.js' %}"></script>
 	<script>
+        let newClaps = {};
+
+
+
       jQuery(window).ready(function() {
+
+            {# Ajax CRSF token setting #}
+            $.ajaxSetup({
+                 beforeSend: function(xhr, settings) {
+                     function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 // Does this cookie string begin with the name we want?
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                         return cookieValue;
+                     }
+                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                         // Only send the token to relative URLs i.e. locally.
+                         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                     }
+                 }
+            });
+
           const formWrapper = $("#message-form-wrapper");
           const messageWrapper = $("#message-wrapper");
           const messageForm = $("#message-form");
@@ -137,7 +167,9 @@
                                 '</div>' +
                               '</div>'
                       }
-                      messageWrapper.prepend(content);
+                      $content = $(content);
+                      bindClapEvent($content.find(".clap-btn"));
+                      messageWrapper.prepend($content);
                   });
               }
 
@@ -187,26 +219,36 @@
 		          fetches = 0;
 		      }, 2000);
 
-          $(".clap-btn").click(function(){
-              const messageId = $(this).data("messagePk");
-              const myClapsCountWrapper = $(this);
-              const clapCountWrapper = $(this).parent().siblings().find(".clap-count");
-              event.preventDefault();
-              if (parseInt(myClapsCountWrapper.attr("data-my-claps")) < 50) {
-                  $.ajax({
-                      type: "POST",
-                      // TODO: change below strings to template url...
-                      url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
-                      data: messageForm.serialize(),
-                      success: function (msg) {
-                          clapCountWrapper.text(parseInt(clapCountWrapper.text()) + 1);
-                          myClapsCountWrapper.attr("data-my-claps", parseInt(myClapsCountWrapper.attr("data-my-claps")) + 1);
-                        console.log(myClapsCountWrapper.attr("data-my-claps"));
-                      },
-                  });
-              }
-              return false;
-          });
+          function bindClapEvent($clapBtn) {
+              $clapBtn.click(function(){
+                  const messageId = $(this).data("messagePk");
+                  const myClapsCountWrapper = $(this);
+                  const clapCountWrapper = $(this).parent().siblings().find(".clap-count");
+                  event.preventDefault();
+                  if (parseInt(myClapsCountWrapper.attr("data-my-claps")) < 50) {
+                      clapCountWrapper.text(parseInt(clapCountWrapper.text()) + 1);
+                      myClapsCountWrapper.attr("data-my-claps", parseInt(myClapsCountWrapper.attr("data-my-claps")) + 1);
+                      if(newClaps["messageId"]) {
+                          newClaps["messageId"] += 1;
+                      } else {
+                          newClaps["messageId"] = 1;
+                          window.setTimeout(function(){
+                              $.ajax({
+                                  type: "POST",
+                                  // TODO: change below strings to template url...
+                                  url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                                  data: {claps: newClaps["messageId"]},
+                                  success: function (msg) {
+                                      delete newClaps["messageId"];
+                                  },
+                              });
+                          }, 3000);
+                      }
+                  }
+                  return false;
+              });
+          }
+          bindClapEvent($(".clap-btn"));
 
       });
 	</script>

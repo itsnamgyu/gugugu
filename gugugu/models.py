@@ -108,7 +108,12 @@ class Member(models.Model):
         messages = list(self.room.message_set.all().filter(
             date_sent__gt=start, date_sent__lt=end).reverse())
 
-        return messages
+        claps_updated_messages = list(self.room.message_set.all().filter(
+            date_claps_updated__gt=start, date_claps_updated__lt=end).reverse())
+
+        updated_data = {"messages": messages, "claps_updated_messages": claps_updated_messages}
+
+        return updated_data
 
     def retrieve_all_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
