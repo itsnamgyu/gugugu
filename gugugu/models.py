@@ -4,7 +4,6 @@ from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class Comment(models.Model):
