@@ -47,11 +47,14 @@
 							<p class="font-weight text-white mt-5">아래 소셜 아이디로 참가 신청하신 후 채팅방을 통해 토크 질문을 미리 다실 수 있습니다!</p>
 							<div class="row justify-content-center">
 								<div class="col-11 col-md-8 col-lg-6 text-left">
-									<a href="">
-										<button class="btn btn btn-primary btn-pill w-100"><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속</button>
+									<a href="{% url 'account_login'%}?next=/sg-talk">
+										<button class="btn btn btn-primary btn-pill w-100">GUGUGU 이메일 계정으로 신청/접속</button>
 									</a>
 									<a href="">
-										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-facebook mr-3"></i>Facebook 아이디로 신청/접속</button>
+										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속 (준비중)</button>
+									</a>
+									<a href="">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-facebook mr-3" ></i>Facebook 아이디로 신청/접속 (준비중)</button>
 									</a>
 								</div>
 							</div>

@@ -30,7 +30,7 @@
 									<label for="id_email">{% trans 'Email' %}</label>
 									<input class="form-control" type="email" name="email" autofocus="" required="" id="id_email">
 									<div class="invalid-feedback d-block text-white">
-										{{ form.login.errors.as_text }}
+										{{ form.email.errors.as_text }}
 									</div>
 								</div>
 								<div class="form-group text-white">
@@ -43,7 +43,7 @@
 								<div class="invalid-feedback d-block text-white">
 									{{ form.non_field_errors.as_text }}
 								</div>
-								<button type="submit" class="btn ml-auto mt-3 float-right">{% trans 'Login' %}</button>
+								<button type="submit" class="btn ml-auto mt-3 float-right">{% trans 'Sign Up' %}</button>
 							</form>
 						</div>
 					</div>
