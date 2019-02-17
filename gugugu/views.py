@@ -54,7 +54,38 @@ def talk(request):
     :param request:
     :return:
     """
-    return render(request, 'gugugu/talk-index.html')
+
+    registered = False
+    if request.user.is_authenticated:
+        if TalkRegistration.objects.filter(user=request.user).exists():
+            registered = True
+
+    return render(request, 'gugugu/talk-index.html', {
+        'registered': registered,
+    })
+
+
+def talk_register(request):
+    if request.user.is_authenticated:
+        if TalkRegistration.objects.filter(user=request.user).exists():
+            return redirect(reverse('talk'))
+    else:
+        return redirect(reverse('talk'))
+
+    form = None
+    if request.method == 'POST':
+        form = TalkRegistrationForm(request.POST)
+        if form.is_valid():
+            form.user = request.user
+            form.save()
+            return redirect(reverse('talk'))
+
+    if form is None:
+        form = TalkRegistrationForm()
+
+    return render(request, 'gugugu/talk-register.html', {
+        'form': form
+    })
 
 
 def room(request, name):

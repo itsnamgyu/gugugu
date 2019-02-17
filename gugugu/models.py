@@ -158,3 +158,14 @@ class Clap(models.Model):
 
     def __str__(self):
         return '{} claped {} message'.format(self.member.name, self.message.text)
+
+
+class TalkRegistration(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=25)
+    department = models.CharField(max_length=25)
+    student_id = models.IntegerField()
+    year = models.IntegerField()
+    interest = models.CharField(max_length=100)
+    career_path = models.CharField(max_length=100)
+    inquiry = models.TextField()
