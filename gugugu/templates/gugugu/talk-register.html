@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+	GUGUGU - {% trans 'Sign In' %}
+{% endblock %}
+
+{% block head %}
+	<meta name="description" content="구구구, 쫌 쓸맛나는 오픈채팅 서비스. PC, 모바일 어디서든 사용 가능한 오픈채팅!">
+	<link rel="stylesheet" href="{% static 'gugugu/css/hero.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/background.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+{% endblock %}
+
+{% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background"> </canvas>
+	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative text-center pt-5 mb-5">
+		<div class="container">
+			<form class="mt-4 text-white" id="login-form" method="post">
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-10 col-lg-8 text-left mt-5">
+						<h3 class="text-white font-weight-bold hero-h1 m-0 p-0 mt-5">참가 신청</h3>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					{% csrf_token %}
+					<div class="col-6 col-md-5 col-lg-4 text-left mt-5">
+						<div class="form-group">
+							<label class="" for="id_name">이름</label>
+							<input class="form-control" type="text" name="name" maxlength="25" required="" id="id_name">
+						</div>
+						<div class="form-group">
+							<label for="id_department">학과</label>
+							<input class="form-control" type="text" name="department" maxlength="25" required="" id="id_department">
+						</div>
+					</div>
+					<div class="col-6 col-md-5 col-lg-4 text-left mt-5">
+						<div class="form-group">
+							<label for="id_student_id">학번</label>
+							<input class="form-control" type="number" name="student_id" required="" id="id_student_id">
+						</div>
+						<div class="form-group">
+							<label for="id_year">학년</label>
+							<input class="form-control" type="number" name="year" required="" id="id_year">
+						</div>
+					</div>
+
+					<div class="col-12 col-md-10 col-lg-8 text-left">
+						<div class="form-group">
+							<label for="id_interest">관심 분야</label>
+							<input class="form-control" type="text" name="interest" maxlength="100" required="" id="id_interest">
+						</div>
+
+						<div class="form-group">
+							<label for="id_career_path">커리어 패스</label>
+							<input class="form-control" type="text" name="career_path" maxlength="100" required="" id="id_career_path">
+						</div>
+
+						<label for="id_inquiry">질문 사항</label>
+						<textarea class="form-control" name="inquiry" cols="40" rows="10" required="" id="id_inquiry"></textarea>
+
+						{{ form.errors }}
+						<button type="submit" class="btn btn-primary ml-auto mt-3 float-right">등록</button>
+					</div>
+				</div>
+				</form>
+		</div>
+	</div>
+	</div>
+{% endblock %}
+
+{% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
+{% endblock %}
