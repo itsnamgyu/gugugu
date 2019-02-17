@@ -163,6 +163,14 @@ class Clap(models.Model):
 class TalkRegistration(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=25)
+
+    YEAR_IN_SCHOOL_CHOICES = (
+        ('FR', 'Freshman'),
+        ('SO', 'Sophomore'),
+        ('JR', 'Junior'),
+        ('SR', 'Senior'),
+    )
+
     department = models.CharField(max_length=25)
     student_id = models.IntegerField()
     year = models.IntegerField()
