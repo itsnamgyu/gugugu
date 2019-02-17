@@ -27,7 +27,7 @@
 							<form class="mt-4" id="login-form" method="post">
 								{% csrf_token %}
 								<div class="form-group text-white">
-									<label for="id_username">{% trans 'Email' %}</label>
+									<label for="id_login">{% trans 'Email' %}</label>
 									<input class="form-control" type="email" name="login" autofocus="" required="" id="id_login">
 									<div class="invalid-feedback d-block text-white">
 										{{ form.login.errors.as_text }}
