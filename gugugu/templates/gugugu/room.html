@@ -10,6 +10,26 @@
 	<meta name="description" content="오픈 채팅방에 참여해보세요!">
 	<link rel="stylesheet" href="{% static 'gugugu/css/room.css' %}">
 	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/applause-button/dist/applause-button.css">
+    <script src="https://unpkg.com/applause-button/dist/applause-button.js"></script>
+    <style>
+        .clap-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .clap-container .count-container {
+            display: none;
+        }
+        .clap-container .clap-count-wrapper {
+            color: #56e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .clap-container .clap-btn-wrapper {
+            margin-left: 10px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -46,11 +66,24 @@
 								<div class="card mt-2 px-4 py-3 my-message">
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
-								</div>
+                                </div>
 							{% else %}
 								<div class="card mt-2 px-4 py-3">
 									<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+
+                                    <div class="clap-container">
+                                        <div class="clap-count-wrapper">
+                                            <span class="clap-count" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+                                        </div>
+                                        <div class="clap-btn-wrapper">
+                                            <applause-button class="clap-btn
+                                                    {% if message.my_claps > 0  %}
+                                                       clapped
+                                                    {% endif %}
+                                                " data-message-pk="{{ message.pk }}" data-my-claps="{{ message.my_claps }}" style="width: 30px; height: 30px;" color="#56e" multiclap="true"/>
+                                        </div>
+                                    </div>
 								</div>
 							{% endif %}
 						{% endfor %}
@@ -61,10 +94,39 @@
 {% endblock %}
 
 {% block body_script %}
-	<!--<script src="{% static 'vendor/granim.min.js' %}"></script>-->
-	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
 	<script>
+        let newClaps = {};
+
+
+
       jQuery(window).ready(function() {
+
+            {# Ajax CRSF token setting #}
+            $.ajaxSetup({
+                 beforeSend: function(xhr, settings) {
+                     function getCookie(name) {
+                         var cookieValue = null;
+                         if (document.cookie && document.cookie != '') {
+                             var cookies = document.cookie.split(';');
+                             for (var i = 0; i < cookies.length; i++) {
+                                 var cookie = jQuery.trim(cookies[i]);
+                                 // Does this cookie string begin with the name we want?
+                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                     break;
+                                 }
+                             }
+                         }
+                         return cookieValue;
+                     }
+                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                         // Only send the token to relative URLs i.e. locally.
+                         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                     }
+                 }
+            });
+
           const formWrapper = $("#message-form-wrapper");
           const messageWrapper = $("#message-wrapper");
           const messageForm = $("#message-form");
@@ -96,9 +158,25 @@
                           content = '<div class="card mt-2 px-4 py-3">' +
                               '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
                               '<p class="d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
-                              '</div>';
+                              '<div class="clap-container">' +
+                                '<div class="clap-count-wrapper">' +
+                                    '<span class="clap-count" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
+                                '</div>' +
+                                '<div class="clap-btn-wrapper">' +
+                                    '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="0" style="width: 30px; height: 30px;" color="#56e" multiclap="true"/>' +
+                                '</div>' +
+                              '</div>'
                       }
-                      messageWrapper.prepend(content);
+                      $content = $(content);
+                      bindClapEvent($content.find(".clap-btn"));
+                      messageWrapper.prepend($content);
+                  });
+              }
+
+              if ( $.isArray(data.claps) && data.claps.length ) {
+                  $.each(data.claps, function (index, value) {
+                      const clap_count_tag = $("[data-message-id=" + value.message_pk + "]");
+                      clap_count_tag.text(value.claps);
                   });
               }
           }
@@ -140,6 +218,38 @@
 		          }
 		          fetches = 0;
 		      }, 2000);
+
+          function bindClapEvent($clapBtn) {
+              $clapBtn.click(function(){
+                  const messageId = $(this).data("messagePk");
+                  const myClapsCountWrapper = $(this);
+                  const clapCountWrapper = $(this).parent().siblings().find(".clap-count");
+                  event.preventDefault();
+                  if (parseInt(myClapsCountWrapper.attr("data-my-claps")) < 50) {
+                      clapCountWrapper.text(parseInt(clapCountWrapper.text()) + 1);
+                      myClapsCountWrapper.attr("data-my-claps", parseInt(myClapsCountWrapper.attr("data-my-claps")) + 1);
+                      if(newClaps["messageId"]) {
+                          newClaps["messageId"] += 1;
+                      } else {
+                          newClaps["messageId"] = 1;
+                          window.setTimeout(function(){
+                              $.ajax({
+                                  type: "POST",
+                                  // TODO: change below strings to template url...
+                                  url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                                  data: {claps: newClaps["messageId"]},
+                                  success: function (msg) {
+                                      delete newClaps["messageId"];
+                                  },
+                              });
+                          }, 3000);
+                      }
+                  }
+                  return false;
+              });
+          }
+          bindClapEvent($(".clap-btn"));
+
       });
 	</script>
 {% endblock %}

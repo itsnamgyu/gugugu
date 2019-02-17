@@ -28,6 +28,8 @@ def index(request):
         room = Room.objects.filter(name=name, active=True)
         if room.exists() and not room.get().deactivate():
             pass
+        elif name in ['sg-talk', 'gu']:
+            pass
         else:
             new = room_form.save()
             if new.activate():
@@ -43,6 +45,50 @@ def index(request):
         'room_form': room_form,
         'valid': valid,
         'validate_room_name_url': reverse('validate_room_name'),
+    })
+
+
+def talk(request):
+    """
+    Custom view for sg seminar event!
+    :param request:
+    :return:
+    """
+
+    registered = False
+    user = None
+    if request.user.is_authenticated:
+        user = request.user
+        if TalkRegistration.objects.filter(user=request.user).exists():
+            registered = True
+
+    return render(request, 'gugugu/talk-index.html', {
+        'registered': registered,
+        'user': user
+    })
+
+
+def talk_register(request):
+    if request.user.is_authenticated:
+        if TalkRegistration.objects.filter(user=request.user).exists():
+            return redirect(reverse('talk'))
+    else:
+        return redirect(reverse('talk'))
+
+    form = None
+    if request.method == 'POST':
+        form = TalkRegistrationForm(request.POST)
+        if form.is_valid():
+            registration = form.save(commit=False)
+            registration.user = request.user
+            registration.save()
+            return redirect(reverse('talk'))
+
+    if form is None:
+        form = TalkRegistrationForm()
+
+    return render(request, 'gugugu/talk-register.html', {
+        'form': form
     })
 
 
@@ -83,6 +129,9 @@ def room(request, name):
 
     if member:
         messages = member.retrieve_all_messages()[::-1]  # TODO: for some reason?
+        # TODO: is there any better logic?
+        for message in messages:
+            message.my_claps = message.get_my_claps_count(member.id)
         return render(request, 'gugugu/room.html', {
             'room': room,
             'messages': messages,
@@ -111,39 +160,82 @@ def room_ajax(request, pk):
             room.date_updated = timezone.now()
 
     room.save()
-    messages = member.retrieve_new_messages()
+    updated_data = member.retrieve_new_messages()
+    messages = updated_data["messages"]
+    claps_updated_messages = updated_data["claps_updated_messages"]
 
     data = {
-        'messages': []
+        'messages': [],
+        'claps': [],
     }
 
     for message in messages:
         data['messages'].append({
             'sender': message.member.name,
             'text': message.text,
+            'claps': message.claps.count(),
+            'pk': message.pk,
+        })
+
+    for message in claps_updated_messages:
+        data['claps'].append({
+            'message_pk': message.pk,
+            'claps': message.claps.count(),
         })
 
     return JsonResponse(data)
 
 
+def clap_ajax(request, room_id, message_id):
+    room = get_object_or_404(Room, pk=room_id)
+    message = get_object_or_404(Message, pk=message_id)
+    member = get_object_or_404(Member, room=room, session_key=request.session.session_key)
+    clap_count = request.POST.get('claps')
+
+    if request.method == 'POST':
+        if Clap.objects.filter(message=message, member=member).count() < 50:
+            with transaction.atomic():
+                for i in range(0, int(clap_count)):
+                    clap = Clap(message=message, member=member)
+                    clap.save()
+            message.date_claps_updated = timezone.now()
+            message.save()
+            room.date_updated = timezone.now()
+
+    room.save()
+    data = {
+        'memberId': member.id,
+        'messageId': message.id,
+    }
+    return JsonResponse(data)
+
+
 def validate_room_name(request):
     form = RoomForm(request.GET)
+    error_msg = ''
+
+    reserved = False
+    taken = False
     if form.is_valid():
         name = form.cleaned_data['name']
         room = Room.objects.filter(name=name, active=True)
-        valid = True
-        taken = room.exists() and not room.get().deactivate()
+        if name in ['sg-talk', 'gu']:
+            valid = False
+            reserved = True
+        else:
+            valid = True
+            taken = room.exists() and not room.get().deactivate()
     else:
         valid = False
-        taken = False
+        taken = True
 
-    error_msg = ''
     if not valid:
-        error_msg = form.errors['name'][0]
-
-    else:
-        if not taken:
+        if taken:
             error_msg = _('A room with that name has been recently used.')
+        elif reserved:
+            error_msg = _('That name is reserved')
+        else:
+            error_msg = form.errors['name'][0]
 
     data = {
         'usable': valid and not taken,

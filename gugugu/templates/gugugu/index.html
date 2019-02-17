@@ -7,7 +7,8 @@
 
 {% block head %}
 	<meta name="description" content="구구구, 쫌 쓸맛나는 오픈채팅 서비스. PC, 모바일 어디서든 사용 가능한 오픈채팅!">
-	<link rel="stylesheet" href="{% static 'gugugu/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/hero.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/background.css' %}">
 	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
 {% endblock %}
 
@@ -33,6 +34,7 @@
 							<input id="room-url-input" name="name" required class="form-control font-weight-bold d-inline align-self-baseline" type="text" placeholder="enter-url" value="{{ room_form.name.value|default:"" }}">
 						</div>
 					</form>
+					<div id="room-form-errors" class="invalid-feedback d-block text-white"><br></div>
 					<button id="room-create-button" type="submit" form="room-form" class="btn btn-lg btn-primary btn-pill mt-4 disabled">방 만들기</button>
 				</div>
 			</div>
@@ -53,7 +55,7 @@
 			</div>
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-10">
-					<div class="card text-left">
+					<div class="card text-left mb-5">
 						<form class="card-body" id="feedback-form" method="post">
 							{% csrf_token %}
 							<h4 class="card-title font-weight-bold mt-2">피드백을 남겨요!</h4>
@@ -74,33 +76,11 @@
 							</div>
 							<div class="w-100 text-right">
 								<button type="submit" id="form-submit" form="feedback-form" class="btn btn-success" data-dismiss="modal">올리기</button>
-								<!--
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-post">올리기</button>
-                                <div class="modal fade" id="modal-post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">🤔 마! 자신있나요..?</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body text-left">
-                                                아직 구현이 안돼서 한번 올리신 피드백은 삭제할 수가 없어요!
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">다시 생각해볼게요...</button>
-                                                <button type="submit" form="feedback-form" class="btn btn-success" data-dismiss="modal">물론이죠!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    -->
 							</div>
 						</form>
 					</div>
 					{% for comment in comments %}
-						<div class="card feedback-card text-left {% if forloop.first %}mt-5{%  else %}mt-3{% endif %} {% if forloop.last %}mb-5{% endif %}">
+						<div class="card feedback-card text-left mt-3 {% if forloop.last %}mb-5{% endif %}">
 							<div class="card-body">
 								<h5 class="card-title font-weight-bold mt-2">By {{ comment.nickname }}</h5>
 								<p class="">{{ comment.content }}!</p>
@@ -116,6 +96,7 @@
 {% block body_script %}
 	<script src="{% static 'vendor/granim.min.js' %}"></script>
 	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
 
 	<script>
       let input = $('#room-url-input');
@@ -139,6 +120,8 @@
 		      setValid("{{ valid }}" === "True");
       {% endif %}
 
+      roomFormErrors = $('#room-form-errors');
+
       input.on('input', function() {
           let name = $(this).val();
 
@@ -160,6 +143,11 @@
                   dataType: 'json',
                   success: function (data) {
                       setValid(data.usable);
+                      if (data.error_msg === "") {
+                          roomFormErrors.html("<br>");
+                      } else {
+                          roomFormErrors.html(data.error_msg);
+                      }
                   }
               });
           }, 250));

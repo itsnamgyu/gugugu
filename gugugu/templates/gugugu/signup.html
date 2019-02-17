@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+	GUGUGU - {% trans 'Sign Up' %}
+{% endblock %}
+
+{% block head %}
+	<meta name="description" content="구구구, 쫌 쓸맛나는 오픈채팅 서비스. PC, 모바일 어디서든 사용 가능한 오픈채팅!">
+	<link rel="stylesheet" href="{% static 'gugugu/css/hero.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/background.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+{% endblock %}
+
+{% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background"> </canvas>
+	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative text-center">
+		<div class="hero-wrapper w-100 d-flex justify-content-center flex-column">
+			<div class="inner-wrapper mt-auto mb-auto justify-content-center">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-12 col-md-8 col-lg-6 text-left mt-5">
+							<h3 class="text-white font-weight-bold hero-h1 m-0 p-0">{% trans 'Sign Up' %}</h3>
+							<form class="mt-4" id="login-form" method="post">
+								{% csrf_token %}
+								<div class="form-group text-white">
+									<label for="id_email">{% trans 'Email' %}</label>
+									<input class="form-control" type="email" name="email" autofocus="" required="" id="id_email">
+									<div class="invalid-feedback d-block text-white">
+										{{ form.login.errors.as_text }}
+									</div>
+								</div>
+								<div class="form-group text-white">
+									<label for="id_password1">{% trans 'Password' %}</label>
+									<input class="form-control" type="password" name="password1" required="" id="id_password1">
+									<div class="invalid-feedback d-block text-white">
+										{{ form.password.errors.as_text }}
+									</div>
+								</div>
+								<div class="invalid-feedback d-block text-white">
+									{{ form.non_field_errors.as_text }}
+								</div>
+								<button type="submit" class="btn ml-auto mt-3 float-right">{% trans 'Login' %}</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
+{% endblock %}

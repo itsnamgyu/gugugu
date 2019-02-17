@@ -1,0 +1,23 @@
+#sogang-shadow {
+    position: fixed;
+    width: 40%;
+    top: 10vw;
+    left: 70vw;
+}
+
+#partner-shadow {
+    position: fixed;
+    width: 80%;
+    top: -5vw;
+    left: -30vw;
+}
+
+.sogang-hero-wrapper {
+    min-height: 60vh;
+    height: 30em;
+    max-height: 560px;
+}
+
+.talk-text {
+    font-size: 1.1em;
+}
