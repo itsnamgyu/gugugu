@@ -109,4 +109,4 @@ venv.bak/
 .idea/
 
 # API secret key
-env.json
+envs.json

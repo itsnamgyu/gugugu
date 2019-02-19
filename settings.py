@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import json
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -25,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = '!%q(-)iw@2nx%u&7jcblmv*0r__-uok-(&$#sivyidd!rwcd%z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -177,15 +178,18 @@ def get_env(setting, envs):
         error_msg = "You SHOULD set {} environ".format(setting)
         raise ImproperlyConfigured(error_msg)
 
-DEV_ENVS = os.path.join(BASE_DIR, "envs_dev.json")
+# DEV_ENVS = os.path.join(BASE_DIR, "envs_dev.json")
 DEPLOY_ENVS = os.path.join(BASE_DIR, "envs.json")
 
-if os.path.exists(DEV_ENVS): # Develop Env
-    env_file = open(DEV_ENVS)
-elif os.path.exists(DEPLOY_ENVS): # Deploy Env
+# if os.path.exists(DEV_ENVS): # Develop Env
+#     env_file = open(DEV_ENVS)
+if os.path.exists(DEPLOY_ENVS): # Deploy Env
     env_file = open(DEPLOY_ENVS)
 else:
     env_file = None
+
+print(DEPLOY_ENVS)
+print(env_file)
 
 if env_file is None: # System environ
     try:
