@@ -19,86 +19,87 @@
 	<canvas id="canvas-background"> </canvas>
 	<img id="logo-shadow" src="{% static 'img/logo-big-shadow.png' %}">
 	<div class="position-relative">
-	<div class="hero w-100 d-flex flex-column justify-content-center">
-		<div class="mt-auto mb-auto text-center">
-			{% if request.path == '/sg-talk/chat' %}
-				<a href="{% url 'talk' %}"><h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3></a>
-				<h5 class="font-weight-light text-white">진로에 대한 고민이 있는 서강인들을 위한 선배님들의 토크!</h5>
-				<div class="container">
-					<div class="row justify-content-center">
-						<div class="col-12 col-md-8 col-lg-6 col-xl-6 text-white text-left font-weight-light">
-							<p class="m-0 mt-5">동문 선배님들에게 궁금한 점이 있다면 자유롭게 질문을 남겨주시면 됩니다! 공감되는 질문이 이미 있다면 적극적인 박수 부탁드리겠습니다! 좋은 질문 올려주시는 분들께는 특별한 굿즈를 나눠드려요 :)</p>
+		<div class="hero w-100 d-flex flex-column justify-content-center">
+			<div class="mt-auto mb-auto text-center">
+				{% if request.path == '/sg-talk/chat' %}
+					<a href="{% url 'talk' %}"><h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3></a>
+					<h5 class="font-weight-light text-white">진로에 대한 고민이 있는 서강인들을 위한 선배님들의 토크!</h5>
+					<div class="container">
+						<div class="row justify-content-center">
+							<div class="col-12 col-md-8 col-lg-6 col-xl-6 text-white text-left font-weight-light">
+								<p class="m-0 mt-5">동문 선배님들에게 궁금한 점이 있다면 자유롭게 질문을 남겨주시면 됩니다! 공감되는 질문이 이미 있다면 적극적인 박수 부탁드리겠습니다! 좋은 질문 올려주시는 분들께는 특별한 굿즈를 나눠드려요 :)</p>
+							</div>
 						</div>
 					</div>
-				</div>
-			{% else %}
-				<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
-				<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
-				<p class="text-white m-0 mt-4">Issues?</p>
-				<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
-					<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
-						<i class="fab fa-github mr-2 text-white"></i>
-						<span> https://github.com/itsnamgyu/gugugu/issues </span>
-					</button>
-				</a>
-			{% endif %}
+				{% else %}
+					<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
+					<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
+					<p class="text-white m-0 mt-4">Issues?</p>
+					<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
+						<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
+							<i class="fab fa-github mr-2 text-white"></i>
+							<span> https://github.com/itsnamgyu/gugugu/issues </span>
+						</button>
+					</a>
+				{% endif %}
+			</div>
 		</div>
-	</div>
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-9">
-				<div class="card p-2 mb-4">
-					<form id="message-form" class="d-flex" method="post">
-						{% csrf_token %}
-						{% if request.path == '/sg-talk/chat' %}
-							<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="질문을 입력해주세요"></textarea>
-							<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold" type="submit">올리기</button>
-						{% else %}
-							<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
-							<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
-						{% endif %}
-					</form>
-				</div>
-				<div class="container text-center mt-5 mb-3">
-					<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortLatest"><i class="fas fa-sort-amount-down mr-2"></i>최신순</button>
-					<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortClaps"><i class="fas fa-sort-amount-down mr-2"></i>Clap순</button>
-				</div>
-				<div id="message-wrapper" class="mx-1 my-4">
-					{% for message in messages %}
-						{% if message.member.name == member.name %}
-							<div class="card mt-2 px-4 py-3 my-message">
-								<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-								<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-9">
+					<div class="card p-2 mb-4">
+						<form id="message-form" class="d-flex" method="post">
+							{% csrf_token %}
+							{% if request.path == '/sg-talk/chat' %}
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="질문을 입력해주세요"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold" type="submit">올리기</button>
+							{% else %}
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
+							{% endif %}
+						</form>
+					</div>
+					<div class="container text-center mt-5 mb-3">
+						<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortLatest"><i class="fas fa-sort-amount-down mr-2"></i>최신순</button>
+						<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortClaps"><i class="fas fa-sort-amount-down mr-2"></i>Clap순</button>
+					</div>
+					<div id="message-wrapper" class="mx-1 my-4">
+						{% for message in messages %}
+							{% if message.member.name == member.name %}
+								<div class="card mt-2 px-4 py-3 my-message">
+									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
 
-								<div class="clap-container">
-									<div class="clap-count-wrapper">
-										<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
-									</div>
-									<div class="clap-btn-wrapper">
-										<applause-button class="clap-btn" disabled
-										                 data-message-pk="{{ message.pk }}" data-my-claps=50
-										                 color="white" multiclap="true"></applause-button>
+									<div class="clap-container">
+										<div class="clap-count-wrapper">
+											<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+										</div>
+										<div class="clap-btn-wrapper">
+											<applause-button class="clap-btn" disabled
+											                 data-message-pk="{{ message.pk }}" data-my-claps=50
+											                 color="white" multiclap="true"></applause-button>
+										</div>
 									</div>
 								</div>
-							</div>
-						{% else %}
-							<div class="card mt-2 px-4 py-3">
-								<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
-								<p class="d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+							{% else %}
+								<div class="card mt-2 px-4 py-3">
+									<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
+									<p class="d-inline-block m-0 message-text font-default">{{ message.text }}</p>
 
-								<div class="clap-container">
-									<div class="clap-count-wrapper">
-										<span class="clap-count" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
-									</div>
-									<div class="clap-btn-wrapper">
-										<applause-button class="clap-btn {% if message.my_claps > 0  %} clapped {% endif %}"
-										                 data-message-pk="{{ message.pk }}" data-my-claps="{{ message.my_claps }}"
-										                 color="#56e" multiclap="true"></applause-button>
+									<div class="clap-container">
+										<div class="clap-count-wrapper">
+											<span class="clap-count" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+										</div>
+										<div class="clap-btn-wrapper">
+											<applause-button class="clap-btn {% if message.my_claps > 0  %} clapped {% endif %}"
+											                 data-message-pk="{{ message.pk }}" data-my-claps="{{ message.my_claps }}"
+											                 color="#56e" multiclap="true"></applause-button>
+										</div>
 									</div>
 								</div>
-							</div>
-						{% endif %}
-					{% endfor %}
+							{% endif %}
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 		</div>
