@@ -107,3 +107,6 @@ venv.bak/
 
 # editor
 .idea/
+
+# API secret key
+env.json

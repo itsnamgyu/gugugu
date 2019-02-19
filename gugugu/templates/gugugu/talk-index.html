@@ -50,11 +50,11 @@
 									<a href="{% url 'account_login'%}?next=/sg-talk">
 										<button class="btn btn btn-primary btn-pill w-100">GUGUGU 이메일 계정으로 신청/접속</button>
 									</a>
-									<a href="">
-										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속 (준비중)</button>
+									<a href="{% url "social:begin" "google-oauth2" %}">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속 (준비중)</button>
 									</a>
-									<a href="">
-										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-facebook mr-3" ></i>Facebook 아이디로 신청/접속 (준비중)</button>
+									<a href="{% url "social:begin" "facebook" %}">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-facebook mr-3" ></i>Facebook 아이디로 신청/접속 (준비중)</button>
 									</a>
 								</div>
 							</div>
