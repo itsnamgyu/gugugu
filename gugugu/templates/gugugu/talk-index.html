@@ -21,21 +21,21 @@
 	<div class="position-relative text-center">
 		<div class="sogang-hero-wrapper w-100 d-flex justify-content-center flex-column">
 			<div class="inner-wrapper mt-auto mb-auto justify-content-center">
-				<h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3>
-				<h5 class="font-weight-light text-white">진로에 대한 고민이 있는 서강인들을 위한 선배님들의 토크!</h5>
-				<div class="container mt-2">
+				<div class="container">
+					<h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3>
+					<h5 class="font-weight-light text-white">진로를 고민하는 서강인들을 위한 선배님들의 토크!</h5>
 					{% if registered %}
-						<p class="font-weight text-white mt-5">신청 완료하셨습니다! 채팅방을 통해 토크 질문을 미리 달아주세요!</p>
+						<p class="font-weight text-white font-weight-bold mt-5">신청 완료하셨습니다! 채팅방을 통해 토크 질문을 미리 달아주세요!</p>
 						<div class="row justify-content-center">
 							<div class="col-11 col-md-8 col-lg-6 text-left">
-								<a href="">
-									<button class="btn btn-lg btn-primary btn-pill w-100 disabled">채팅 참가 (준비중)</button>
+								<a href="{% url 'talk_room' %}">
+									<button class="btn btn-lg btn-primary btn-pill w-100">질문 채팅방 참가</button>
 								</a>
 							</div>
 						</div>
 					{% else %}
 						{% if user %}
-							<p class="font-weight text-white mt-5">신청을 완료해주세요!</p>
+							<p class="font-weight text-white font-weight-bold mt-5">신청을 완료해주세요!</p>
 							<div class="row justify-content-center">
 								<div class="col-11 col-md-8 col-lg-6 text-left">
 									<a href="{% url 'talk_register' %}">
@@ -44,17 +44,17 @@
 								</div>
 							</div>
 						{% else %}
-							<p class="font-weight text-white mt-5">아래 소셜 아이디로 참가 신청하신 후 채팅방을 통해 토크 질문을 미리 다실 수 있습니다!</p>
+							<p class="font-weight text-white font-weight-bold mt-5">아래 소셜 아이디로 참가 신청하신 후 채팅방을 통해 토크 질문을 미리 다실 수 있습니다!</p>
 							<div class="row justify-content-center">
 								<div class="col-11 col-md-8 col-lg-6 text-left">
-									<a href="{% url 'account_login'%}?next=/sg-talk">
-										<button class="btn btn btn-primary btn-pill w-100">GUGUGU 이메일 계정으로 신청/접속</button>
+{#									<a href="{% url 'account_login'%}?next=/sg-talk">#}
+{#										<button class="btn btn btn-primary btn-pill w-100">GUGUGU 이메일 계정으로 신청/접속</button>#}
+{#									</a>#}
+									<a href="{% url "social:begin" backend="google-oauth2" %}?next={{ request.path }}">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속</button>
 									</a>
-									<a href="">
-										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-google mr-3"></i>Google 아이디로 신청/접속 (준비중)</button>
-									</a>
-									<a href="">
-										<button class="btn btn btn-primary btn-pill mt-3 w-100" disabled><i class="fab fa-facebook mr-3" ></i>Facebook 아이디로 신청/접속 (준비중)</button>
+										<a href="{% url "social:begin" backend="facebook" %}?next={{ request.path }}">
+										<button class="btn btn btn-primary btn-pill mt-3 w-100"><i class="fab fa-facebook mr-3" ></i>Facebook 아이디로 신청/접속</button>
 									</a>
 								</div>
 							</div>
@@ -67,13 +67,11 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
-	</div>
 	<div class="container mb-5">
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-10 col-xl-8 text-white text-left talk-text font-weight-light">
-				<h5 class="text-white font-weight-bold mt-5 mb-4">개요</h5>
+				<h5 class="text-white font-weight-bold mt-4 mb-4">개요</h5>
 				<p class="text-white m-0 p-0 mt-2">👉 일시: 2019년 3월 7일 목요일 오후 6시30분</p>
 				<p class="text-white m-0 p-0 mt-2">👉 장소: 추후 공지 </p>
 				<p class="text-white m-0 p-0 mt-2">👉 패널리스트: 아래 첨부내용 확인해주세요! </p>
@@ -82,14 +80,14 @@
 
 					학생분들께서 career path 결정 및 development 관련하여 언제나 많은 고민을 하고 있으리라 생각됩니다.
 					졸업 후 어떤 분야에서 일을 하는지, 혹은 어떻게 준비해야 하는지 등 실질적으로 가지고 계신 궁금증을 조금이라도 해소해 드리고자, 뜻이 맞는 졸업생들이 모여 패널토크를 진행하게 되었습니다.
-					다양한 분야에서 일하고 있는 졸업생들과 함께 자유로운 Q&A 패널로 행사를 진행할 예정이며, 기회가 된다면 referral 등 실질적으로 졸업생들이 도와줄 수 있는 부분에 대해서도 이야기 나눌 예정입니다.
+					다양한 분야에서 일하고 있는 졸업생들과 함께 자유로운 Q&A 패널로 행사를 진행할 예정이며, 기회가 된다면 referral 등 실질적으로 졸업생들이 도와줄 수 있는 부분에 대해서도 이야기 나눌 예정입니다. <br><br>
 
-					주요사항 1. 저녁시간에 진행되는 행사인만큼 간단한 다과가 제공될 예정입니다. 원활한 준비를 위하여 미리 참석인원을 파악하고자 하니 아래 양식을 통해 RSVP해주시면 감사하겠습니다.
+					주요사항 1. 저녁시간에 진행되는 행사인만큼 간단한 다과가 제공될 예정입니다. 원활한 준비를 위하여 미리 참석인원을 파악하고자 하니 위 신청 버튼을 통해 RSVP해주시면 감사하겠습니다. <br><br>
 
-					주요사항 2. 효과적인 Q&A 패널 진행을 위하여, 질문을 미리 수집하고자 합니다.
-					2-1. 질문은 중복하여 원하시는 만큼 올리실 수 있습니다.
-					2-2. 다른 학우분들이 올려주시는 질문 중 공감되는 내용이 있다면, 투표를 할 수 있게끔 해놨으니, Clap 기능을 적극적으로 해주시면 감사하겠습니다!  질문들을 취합 및 정리하는데 큰 도움이 됩니다 :)
-					2-3. 여러 동문들께서 다양한 회사 기념품을 기부해 주셨습니다. 좋은 질문 올려주시는 분들께 나눠드릴 예정이니, 궁금하신 점 많이 올려주시기 바랍니다!
+					주요사항 2. 효과적인 Q&A 패널 진행을 위하여, 질문을 미리 수집하고자 합니다. RSVP을 완료하시면 질문을 올릴 수 있는 화면이 나옵니다.
+{#					2-1. 질문은 중복하여 원하시는 만큼 올리실 수 있습니다.#}
+{#					2-2. 다른 학우분들이 올려주시는 질문 중 공감되는 내용이 있다면, 투표를 할 수 있게끔 해놨으니, Clap 기능을 적극적으로 해주시면 감사하겠습니다!  질문들을 취합 및 정리하는데 큰 도움이 됩니다 :)#}
+{#					2-3. 여러 동문들께서 다양한 회사 기념품을 기부해 주셨습니다. 좋은 질문 올려주시는 분들께 나눠드릴 예정이니, 궁금하신 점 많이 올려주시기 바랍니다!#}
 				</div>
 				<h5 class="text-white font-weight-bold mt-5 mb-4">🎁 기념품 </h5>
 					<div id="carouselExampleControls" class="carousel slide w-100" data-ride="carousel">
@@ -168,7 +166,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 {% endblock %}
 
 {% block body_script %}

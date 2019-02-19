@@ -24,8 +24,8 @@
 }
 
 .hero {
-    height: 24rem;
-    min-height: 240px;:
+    height: 28rem;
+    min-height: 280px;:
 }
 
 #message-form-wrapper {
@@ -33,13 +33,13 @@
 }
 
 #id_message-text {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     border-radius: 8px;
     border: none;
 }
 
 #message-form-submit {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 }
 
 .my-message {
@@ -54,6 +54,32 @@
     font-size: 1.1rem;
 }
 
+.clap-count {
+    font-size: 16px;
+}
+
+.clap-btn {
+    width: 32px;
+    height: 32px;
+}
+
+.clap-container {
+    display: flex;
+    justify-content: flex-end;
+}
+.clap-container .count-container {
+    display: none;
+}
+.clap-container .clap-count-wrapper {
+    color: #56e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.clap-container .clap-btn-wrapper {
+    margin-left: 10px;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   select,
   textarea,
@@ -61,3 +87,4 @@
     font-size: 16px;
   }
 }
+

@@ -10,26 +10,8 @@
 	<meta name="description" content="오픈 채팅방에 참여해보세요!">
 	<link rel="stylesheet" href="{% static 'gugugu/css/room.css' %}">
 	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
-    <link rel="stylesheet" href="https://unpkg.com/applause-button/dist/applause-button.css">
-    <script src="https://unpkg.com/applause-button/dist/applause-button.js"></script>
-    <style>
-        .clap-container {
-            display: flex;
-            justify-content: flex-end;
-        }
-        .clap-container .count-container {
-            display: none;
-        }
-        .clap-container .clap-count-wrapper {
-            color: #56e;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .clap-container .clap-btn-wrapper {
-            margin-left: 10px;
-        }
-    </style>
+	<link rel="stylesheet" href="https://unpkg.com/applause-button/dist/applause-button.css">
+	<script src="https://unpkg.com/applause-button/dist/applause-button.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -39,26 +21,47 @@
 	<div class="position-relative">
 		<div class="hero w-100 d-flex flex-column justify-content-center">
 			<div class="mt-auto mb-auto text-center">
-				<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
-				<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
-				<p class="text-white m-0 mt-4">Issues?</p>
-				<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
-					<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
-						<i class="fab fa-github mr-2 text-white"></i>
-						<span> https://github.com/itsnamgyu/gugugu/issues </span>
-					</button>
-				</a>
+				<div class="container">
+					{% if request.path == '/sg-talk/chat' %}
+						<a href="{% url 'talk' %}"><h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3></a>
+						<h5 class="font-weight-light text-white">진로를 고민하는 서강인들을 위한 선배님들의 토크!</h5>
+						<div class="row justify-content-center">
+							<div class="col-12 col-md-8 col-lg-6 col-xl-6 text-white text-left font-weight-light">
+								<p class="m-0 mt-4">동문 선배님들에게 궁금한 점이 있다면 자유롭게 질문을 남겨주시면 됩니다! 공감되는 질문이 이미 있다면 적극적인 박수 부탁드리겠습니다! 좋은 질문 올려주시는 분들께는 특별한 굿즈를 나눠드려요 :)</p>
+							</div>
+						</div>
+					{% else %}
+						<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
+						<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
+						<p class="text-white m-0 mt-4">Issues?</p>
+						<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
+							<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
+								<i class="fab fa-github mr-2 text-white"></i>
+								<span> https://github.com/itsnamgyu/gugugu/issues </span>
+							</button>
+						</a>
+					{% endif %}
+				</div>
 			</div>
 		</div>
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-9">
-					<div class="card p-2">
+					<div class="card p-2 mb-4">
 						<form id="message-form" class="d-flex" method="post">
 							{% csrf_token %}
-							<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
-							<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
+							{% if request.path == '/sg-talk/chat' %}
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="질문을 입력해주세요"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold" type="submit">올리기</button>
+							{% else %}
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
+							{% endif %}
 						</form>
+					</div>
+					<div class="container text-center mt-5 mb-3">
+						<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortLatest"><i class="fas fa-sort-amount-down mr-2"></i>최신순</button>
+						<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortClaps"><i class="fas fa-sort-amount-down mr-2"></i>Clap순</button>
 					</div>
 					<div id="message-wrapper" class="mx-1 my-4">
 						{% for message in messages %}
@@ -66,24 +69,33 @@
 								<div class="card mt-2 px-4 py-3 my-message">
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
-                                </div>
+
+									<div class="clap-container">
+										<div class="clap-count-wrapper">
+											<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+										</div>
+										<div class="clap-btn-wrapper">
+											<applause-button class="clap-btn" disabled
+											                 data-message-pk="{{ message.pk }}" data-my-claps=50
+											                 color="white" multiclap="true"></applause-button>
+										</div>
+									</div>
+								</div>
 							{% else %}
 								<div class="card mt-2 px-4 py-3">
 									<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="d-inline-block m-0 message-text font-default">{{ message.text }}</p>
 
-                                    <div class="clap-container">
-                                        <div class="clap-count-wrapper">
-                                            <span class="clap-count" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
-                                        </div>
-                                        <div class="clap-btn-wrapper">
-                                            <applause-button class="clap-btn
-                                                    {% if message.my_claps > 0  %}
-                                                       clapped
-                                                    {% endif %}
-                                                " data-message-pk="{{ message.pk }}" data-my-claps="{{ message.my_claps }}" style="width: 30px; height: 30px;" color="#56e" multiclap="true"/>
-                                        </div>
-                                    </div>
+									<div class="clap-container">
+										<div class="clap-count-wrapper">
+											<span class="clap-count" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+										</div>
+										<div class="clap-btn-wrapper">
+											<applause-button class="clap-btn {% if message.my_claps > 0  %} clapped {% endif %}"
+											                 data-message-pk="{{ message.pk }}" data-my-claps="{{ message.my_claps }}"
+											                 color="#56e" multiclap="true"></applause-button>
+										</div>
+									</div>
 								</div>
 							{% endif %}
 						{% endfor %}
@@ -91,41 +103,42 @@
 				</div>
 			</div>
 		</div>
+	</div>
 {% endblock %}
 
 {% block body_script %}
 	<script src="{% static 'gugugu/js/background.js' %}"></script>
 	<script>
-        let newClaps = {};
+      let newClaps = {};
 
 
 
       jQuery(window).ready(function() {
 
-            {# Ajax CRSF token setting #}
-            $.ajaxSetup({
-                 beforeSend: function(xhr, settings) {
-                     function getCookie(name) {
-                         var cookieValue = null;
-                         if (document.cookie && document.cookie != '') {
-                             var cookies = document.cookie.split(';');
-                             for (var i = 0; i < cookies.length; i++) {
-                                 var cookie = jQuery.trim(cookies[i]);
-                                 // Does this cookie string begin with the name we want?
-                                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                     break;
-                                 }
-                             }
-                         }
-                         return cookieValue;
-                     }
-                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                         // Only send the token to relative URLs i.e. locally.
-                         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                     }
-                 }
-            });
+          {# Ajax CRSF token setting #}
+          $.ajaxSetup({
+              beforeSend: function(xhr, settings) {
+                  function getCookie(name) {
+                      var cookieValue = null;
+                      if (document.cookie && document.cookie != '') {
+                          var cookies = document.cookie.split(';');
+                          for (var i = 0; i < cookies.length; i++) {
+                              var cookie = jQuery.trim(cookies[i]);
+                              // Does this cookie string begin with the name we want?
+                              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                  break;
+                              }
+                          }
+                      }
+                      return cookieValue;
+                  }
+                  if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                      // Only send the token to relative URLs i.e. locally.
+                      xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                  }
+              }
+          });
 
           const formWrapper = $("#message-form-wrapper");
           const messageWrapper = $("#message-wrapper");
@@ -153,18 +166,25 @@
                           content = '<div class="card mt-2 px-4 py-3 my-message">' +
                               '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
                               '<p class="text-white d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
-                              '</div>';
+                              '<div class="clap-container">' +
+                              '<div class="clap-count-wrapper">' +
+                              '<span class="clap-count text-white" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
+                              '</div>' +
+                              '<div class="clap-btn-wrapper">' +
+                              '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="50" color="white" multiclap="true"/>' +
+                              '</div>' +
+                              '</div>'
                       } else {
                           content = '<div class="card mt-2 px-4 py-3">' +
                               '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
                               '<p class="d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '<div class="clap-container">' +
-                                '<div class="clap-count-wrapper">' +
-                                    '<span class="clap-count" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
-                                '</div>' +
-                                '<div class="clap-btn-wrapper">' +
-                                    '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="0" style="width: 30px; height: 30px;" color="#56e" multiclap="true"/>' +
-                                '</div>' +
+                              '<div class="clap-count-wrapper">' +
+                              '<span class="clap-count" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
+                              '</div>' +
+                              '<div class="clap-btn-wrapper">' +
+                              '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="0" color="#56e" multiclap="true"/>' +
+                              '</div>' +
                               '</div>'
                       }
                       $content = $(content);
@@ -193,11 +213,11 @@
               return false;
           });
 
-          const wait = 250;
+          const wait = 1000;
           let fetchMessages;
           let fetches = 0;
-		      (fetchMessages = function() {
-		          let time = new Date().getTime();
+          (fetchMessages = function() {
+              let time = new Date().getTime();
               $.get("{% url 'room_ajax' pk=room.pk %}", function(data, status) {
                   fetches += 1;
                   update_messages(data, status);
@@ -210,14 +230,14 @@
               });
           });
 
-		      let timeout = setTimeout(fetchMessages, wait);
-		      setInterval(function() {
-		          if (fetches === 0) {
+          let timeout = setTimeout(fetchMessages, wait);
+          setInterval(function() {
+              if (fetches === 0) {
                   clearTimeout(timeout);
                   timeout = setTimeout(fetchMessages, wait);
-		          }
-		          fetches = 0;
-		      }, 2000);
+              }
+              fetches = 0;
+          }, 2000);
 
           function bindClapEvent($clapBtn) {
               $clapBtn.click(function(){
@@ -236,7 +256,7 @@
                               $.ajax({
                                   type: "POST",
                                   // TODO: change below strings to template url...
-                                  url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                                  url: "/gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
                                   data: {claps: newClaps["messageId"]},
                                   success: function (msg) {
                                       delete newClaps["messageId"];
@@ -249,6 +269,60 @@
               });
           }
           bindClapEvent($(".clap-btn"));
+
+          function sortProperties(obj, isNumericSort)
+          {
+              isNumericSort=isNumericSort || false; // by default text sort
+              var sortable=[];
+              for(var key in obj)
+                  if(obj.hasOwnProperty(key))
+                      sortable.push([parseInt(key), obj[key]]);
+              if(isNumericSort)
+                  sortable.sort(function(a, b)
+                  {
+                      return a[1]-b[1];
+                  });
+              else
+                  sortable.sort(function(a, b)
+                  {
+                      var x=a[1].toLowerCase(),
+                          y=b[1].toLowerCase();
+                      return x<y ? -1 : x>y ? 1 : 0;
+                  });
+              return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+          }
+
+          $('.sort-button').click(function() {
+              if (this.id === 'sortLatest') {
+                  const questionIds = {};
+                  const questionCardsId = $("#message-wrapper").find(".card");
+                  $.each(questionCardsId.find(".clap-count"), function(i, val){
+                      questionIds[i] = parseInt($(val).attr('data-message-id'))
+                      console.log(questionIds[i])
+                  });
+                  const sortedQuestionIds = sortProperties(questionIds, true);
+
+                  $("#message-wrapper").empty();
+                  $.each(sortedQuestionIds, function(i, val){
+                      $("#message-wrapper").prepend(questionCardsId[val[0]]);
+                  });
+                  bindClapEvent($(".clap-btn"));
+              }
+              else if (this.id === 'sortClaps') {
+                  const questionClaps = {};
+                  const questionCards = $("#message-wrapper").find(".card");
+                  $.each(questionCards.find(".clap-count"), function(i, val){
+                      questionClaps[i] = parseInt($(val).text());
+                  });
+                  const sortedQuestionClaps = sortProperties(questionClaps, true);
+
+                  $("#message-wrapper").empty();
+                  $.each(sortedQuestionClaps, function(i, val){
+                      $("#message-wrapper").prepend(questionCards[val[0]]);
+                  });
+                  bindClapEvent($(".clap-btn"));
+              }
+          });
 
       });
 	</script>
