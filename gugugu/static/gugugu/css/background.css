@@ -4,7 +4,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: -1;
     background: #501145; /* Old browsers */
     background: -moz-linear-gradient(left, #501145 0%, #501145 0%, #c63771 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(left, #501145 0%,#501145 0%,#c63771 100%); /* Chrome10-25,Safari5.1-6 */
