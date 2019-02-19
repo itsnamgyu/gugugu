@@ -22,25 +22,35 @@
 		<div class="hero w-100 d-flex flex-column justify-content-center">
 			<div class="mt-auto mb-auto text-center">
 				<div class="container">
-					{% if request.path == '/sg-talk/chat' %}
+{#					{% if request.path == '/sg-talk/chat' %}#}
 						<a href="{% url 'talk' %}"><h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3></a>
 						<h5 class="font-weight-light text-white">진로를 고민하는 서강인들을 위한 선배님들의 토크!</h5>
 						<div class="row justify-content-center">
 							<div class="col-12 col-md-8 col-lg-6 col-xl-6 text-white text-left font-weight-light">
-								<p class="m-0 mt-4">동문 선배님들에게 궁금한 점이 있다면 자유롭게 질문을 남겨주시면 됩니다! 공감되는 질문이 이미 있다면 적극적인 박수 부탁드리겠습니다! 좋은 질문 올려주시는 분들께는 특별한 굿즈를 나눠드려요 :)</p>
+								<p class="m-0 mt-4">
+                                    동문 선배님들에게 궁금한 점이 있다면 자유롭게 질문을 남겨주시면 됩니다! 공감되는 질문이 이미 있다면 적극적인 박수 부탁드리겠습니다! <br>
+                                    여러 동문들께서 다양한 회사 기념품을 기부해 주셨습니다. 좋은 질문 올려주시는 분들께 나눠드릴 예정이니, 궁금하신 점 많이 올려주시기 바랍니다! :)<br><br>
+
+                                    <ol>
+                                        <li>질문은 중복하여 원하시는 만큼 올리실 수 있습니다.</li>
+                                        <li>다른 학우분들이 올려주시는 질문 중 공감되는 내용이 있다면, 투표를 할 수 있게끔 해놨으니, Clap 적극적으로 해주시면 감사하겠습니다! (1 질문 당 Clap 최대 50회)</li>
+                                    </ol>
+
+                                    <a href="{% url 'talk' %}">토크 정보 보러가기</a>
+                                </p>
 							</div>
 						</div>
-					{% else %}
-						<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>
-						<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>
-						<p class="text-white m-0 mt-4">Issues?</p>
-						<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">
-							<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">
-								<i class="fab fa-github mr-2 text-white"></i>
-								<span> https://github.com/itsnamgyu/gugugu/issues </span>
-							</button>
-						</a>
-					{% endif %}
+{#					{% else %}#}
+{#						<h5 class="text-white mt-3">{% trans "Welcome" %}, {{ member.name }}</h5>#}
+{#						<h3 class="text-white font-weight-bold">gugugu.co/{{ room.name }}</h3>#}
+{#						<p class="text-white m-0 mt-4">Issues?</p>#}
+{#						<a href="https://github.com/itsnamgyu/gugugu/issues" class="text-white">#}
+{#							<button type="button" class="btn btn-pill btn-dark btn-info m-0 mt-2">#}
+{#								<i class="fab fa-github mr-2 text-white"></i>#}
+{#								<span> https://github.com/itsnamgyu/gugugu/issues </span>#}
+{#							</button>#}
+{#						</a>#}
+{#					{% endif %}#}
 				</div>
 			</div>
 		</div>
@@ -70,16 +80,16 @@
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
 
-									<div class="clap-container">
-										<div class="clap-count-wrapper">
-											<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
-										</div>
-										<div class="clap-btn-wrapper">
-											<applause-button class="clap-btn" disabled
-											                 data-message-pk="{{ message.pk }}" data-my-claps=50
-											                 color="white" multiclap="true"></applause-button>
-										</div>
-									</div>
+{#									<div class="clap-container">#}
+{#										<div class="clap-count-wrapper">#}
+{#											<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>#}
+{#										</div>#}
+{#										<div class="clap-btn-wrapper">#}
+{#											<applause-button class="clap-btn" disabled#}
+{#											                 data-message-pk="{{ message.pk }}" data-my-claps=50#}
+{#											                 color="white" multiclap="true"></applause-button>#}
+{#										</div>#}
+{#									</div>#}
 								</div>
 							{% else %}
 								<div class="card mt-2 px-4 py-3">
@@ -166,13 +176,13 @@
                           content = '<div class="card mt-2 px-4 py-3 my-message">' +
                               '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
                               '<p class="text-white d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
-                              '<div class="clap-container">' +
-                              '<div class="clap-count-wrapper">' +
-                              '<span class="clap-count text-white" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
-                              '</div>' +
-                              '<div class="clap-btn-wrapper">' +
-                              '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="50" color="white" multiclap="true"/>' +
-                              '</div>' +
+                              {#'<div class="clap-container">' +#}
+                              {#'<div class="clap-count-wrapper">' +#}
+                              {#'<span class="clap-count text-white" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +#}
+                              {#'</div>' +#}
+                              {#'<div class="clap-btn-wrapper">' +#}
+                              {#'<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="50" color="white" multiclap="true"/>' +#}
+                              {#'</div>' +#}
                               '</div>'
                       } else {
                           content = '<div class="card mt-2 px-4 py-3">' +

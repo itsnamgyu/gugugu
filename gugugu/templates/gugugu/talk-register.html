@@ -26,7 +26,6 @@
 					</div>
 				</div>
 				<div class="row justify-content-center">
-					{{ form }}
 					{% csrf_token %}
 					<div class="col-6 col-md-5 col-lg-4 text-left mt-5">
 						<div class="form-group">
@@ -35,33 +34,80 @@
 						</div>
 						<div class="form-group">
 							<label for="id_department">학과</label>
-							<input class="form-control" type="text" name="department" maxlength="25" required="" id="id_department">
+{#							<input class="form-control" type="text" name="department" maxlength="25" required="" id="id_department">#}
+                            <div class="dropdown">
+                                <select class="custom-select" name="department" id="id_department" required>
+                                  <option selected>학과를 선택해주세요</option>
+                                  <option value="컴퓨터학과">컴퓨터학과</option>
+                                  <option value="경영학과">경영학과</option>
+                                  <option value="아트앤테크놀로지">아트앤테크놀로지</option>
+                                  <option value="전자공학">전자공학</option>
+                                  <option value="기타">기타</option>
+                                </select>
+                            </div>
 						</div>
 					</div>
 					<div class="col-6 col-md-5 col-lg-4 text-left mt-5">
 						<div class="form-group">
 							<label for="id_student_id">학번</label>
-							<input class="form-control" type="number" name="student_id" required="" id="id_student_id">
+							<input class="form-control" type="number" name="student_id" required="" id="id_student_id" placeholder="2012">
 						</div>
 						<div class="form-group">
 							<label for="id_year">학년</label>
-							<input class="form-control" type="number" name="year" required="" id="id_year">
+{#							<input class="form-control" type="number" name="year" required="" id="id_year">#}
+                            <div class="dropdown">
+                                <select class="custom-select" name="year" id="id_year" required>
+                                  <option selected>학년을 선택해주세요</option>
+                                  <option value="1">1학년</option>
+                                  <option value="2">2학년</option>
+                                  <option value="3">3학년</option>
+                                  <option value="4">4학년</option>
+                                </select>
+                            </div>
 						</div>
 					</div>
 
 					<div class="col-12 col-md-10 col-lg-8 text-left">
 						<div class="form-group">
 							<label for="id_interest">관심 분야</label>
-							<input class="form-control" type="text" name="interest" maxlength="100" required="" id="id_interest">
+{#							<input class="form-control" type="text" name="interest" maxlength="100" required="" id="id_interest">#}
+                            <div class="dropdown">
+                                <select class="custom-select"  name="interest" id="id_interest" required>
+                                  <option selected>관심 분야를 선택해주세요</option>
+                                  <option value="AI/ML">AI/ML</option>
+                                  <option value="Robotics">Robotics</option>
+                                  <option value="System">System</option>
+                                  <option value="Theory">Theory</option>
+                                  <option value="HCI">HCI</option>
+                                  <option value="UI/UX">UI/UX</option>
+                                  <option value="Data science">Data science</option>
+                                  <option value="Business/Marketing">Business/Marketing</option>
+                                  <option value="General Software">General Software</option>
+                                  <option value="General Hardware">General Hardware</option>
+                                  <option value="기타">기타</option>
+                                </select>
+                            </div>
 						</div>
 
 						<div class="form-group">
 							<label for="id_career_path">커리어 패스</label>
-							<input class="form-control" type="text" name="career_path" maxlength="100" required="" id="id_career_path">
+{#							<input class="form-control" type="text" name="career_path" maxlength="100" required="" id="id_career_path">#}
+                            <div class="dropdown">
+                                <select class="custom-select"  name="career_path" id="id_career_path" required>
+                                  <option selected>커리어 패스를 선택해주세요</option>
+                                  <option value="국내 Industry">국내 Industry</option>
+                                  <option value="해외 Industry">해외 Industry</option>
+                                  <option value="공기업">공기업</option>
+                                  <option value="창업">창업</option>
+                                  <option value="국내 대학원">국내 대학원</option>
+                                  <option value="해외 대학원">해외 대학원</option>
+                                  <option value="기타">기타</option>
+                                </select>
+                            </div>
 						</div>
 
-{#						<label for="id_inquiry">질문 사항</label>#}
-{#						<textarea class="form-control" name="inquiry" cols="40" rows="10" required="" id="id_inquiry"></textarea>#}
+						<label for="id_inquiry">질문 사항</label>
+						<textarea class="form-control" name="inquiry" cols="40" rows="10" required="" id="id_inquiry"></textarea>
 
 						{{ form.errors }}
 						<button type="submit" class="btn btn-primary ml-auto mt-3 float-right">등록</button>
