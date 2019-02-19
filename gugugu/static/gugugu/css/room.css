@@ -24,8 +24,8 @@
 }
 
 .hero {
-    height: 30rem;
-    min-height: 300px;:
+    height: 28rem;
+    min-height: 280px;:
 }
 
 #message-form-wrapper {
@@ -55,12 +55,12 @@
 }
 
 .clap-count {
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .clap-btn {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
 }
 
 .clap-container {

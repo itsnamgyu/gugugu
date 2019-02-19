@@ -1,20 +1,18 @@
 {% load static %}
 {% load i18n %}
-<nav class="navbar navbar-expand navbar-light navbar-transparent fixed-top position-absolute">
+<nav class="navbar navbar-expand-md navbar-light navbar-transparent fixed-top position-absolute">
 	<ul class="navbar-nav mr-auto">
-		<li class="nav-item mx-4 my-auto">
-			<a class="navbar-brand align-middle d-inline-block font-weight-bold text-white" href="{%  url 'index' %}">
-				<img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block" alt="">
-				GUGUGU.CO
-			</a>
-		</li>
+		<a class="navbar-brand align-middle d-inline-block font-weight-bold text-white" href="{%  url 'index' %}">
+			<img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block" alt="">
+			GUGUGU.CO
+		</a>
 	</ul>
 	<ul class="navbar-nav my-auto text-white">
-		<li class="nav-item mx-4 my-auto">
+		<li class="nav-item my-auto d-none d-md-block mx-2">
 			<a href="https://github.com/itsnamgyu/gugugu" class="text-white"><i class="fab fa-github mr-2"></i>GitHub에서 보기</a>
 		</li>
 		{% if user.registration %}
-			<li class="nav-item mx-4">
+			<li class="nav-item mx-2">
 				환영합니다, {{ user.registration.name }}님!
 			</li>
 		{% else %}
