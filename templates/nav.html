@@ -5,8 +5,8 @@
 		<img src="{% static 'img/logo.png' %}" width="40" height="40" class="d-inline-block" alt="">
 		GUGUGU.CO
 	</a>
-	{% if user.is_authenticated %}
-		<!--<p class="navbar-text text-white">{% trans 'Welcome' %} {{ user.get_username }}</p>-->
+	{% if user.registration %}
+		<p class="navbar-text text-white">안녕하세요, {{ user.registration.name }}님!</p>
 	{% else %}
 		<!--<a class="navbar-text text-white" href="{% url 'account_login' %}?next={{ request.path }}">{%  trans 'Sign In' %}</a>-->
 	{% endif %}
