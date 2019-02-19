@@ -125,7 +125,7 @@ class Member(models.Model):
         return messages
 
     class Meta:
-        unique_together = (('room', 'name'), ('room', 'user'))
+        unique_together = ('room', 'user')
 
     @property
     def registered(self):
