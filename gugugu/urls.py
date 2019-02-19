@@ -19,5 +19,4 @@ urlpatterns = [
     path('gu/logout', LogoutView.as_view(), name='account_logout'),
 
     path('', include('social_django.urls', namespace='social')),
-    path('.*', views.talk_redirect, name='talk_redirect')
 ]
