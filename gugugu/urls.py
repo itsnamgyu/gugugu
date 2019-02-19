@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('sg-talk', views.talk, name='talk'),
+    path('sg-talk/chat', views.talk_room, name='talk_room'),
     path('sg-talk/register', views.talk_register, name='talk_register'),
     path('', views.index, name='index'),
     path('gu/ajax/validate-room-name', views.validate_room_name, name='validate_room_name'),
