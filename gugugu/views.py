@@ -94,6 +94,7 @@ def talk_room(request):
     else:
         member = Member(room=room, session_key=request.session.session_key, name=registration.name)
         member.user = user
+        member.save()
 
     messages = member.retrieve_all_messages()[::-1]  # TODO: for some reason?
     # TODO: is there any better logic?
