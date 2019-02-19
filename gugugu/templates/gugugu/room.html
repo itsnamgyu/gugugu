@@ -58,6 +58,17 @@
 							<div class="card mt-2 px-4 py-3 my-message">
 								<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 								<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
+
+								<div class="clap-container">
+									<div class="clap-count-wrapper">
+										<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+									</div>
+									<div class="clap-btn-wrapper">
+										<applause-button class="clap-btn" disabled
+										                 data-message-pk="{{ message.pk }}" data-my-claps=50
+										                 color="white" multiclap="true"></applause-button>
+									</div>
+								</div>
 							</div>
 						{% else %}
 							<div class="card mt-2 px-4 py-3">
@@ -263,10 +274,22 @@
             }
 
             $('input[type=radio][name=sortOptions]').click(function() {
-                if (this.value == 'latest') {
-                    location.reload();
+                if (this.value === 'latest') {
+                    const questionIds = {};
+                    const questionCardsId = $("#message-wrapper").find(".card");
+                    $.each(questionCardsId.find(".clap-count"), function(i, val){
+                        questionIds[i] = parseInt($(val).attr('data-message-id'))
+		                    console.log(questionIds[i])
+                    });
+                    const sortedQuestionIds = sortProperties(questionIds, true);
+
+                    $("#message-wrapper").empty();
+                    $.each(sortedQuestionIds, function(i, val){
+                        $("#message-wrapper").prepend(questionCardsId[val[0]]);
+                    });
+                    bindClapEvent($(".clap-btn"));
                 }
-                else if (this.value == 'claps') {
+                else if (this.value === 'claps') {
                     const questionClaps = {};
                     const questionCards = $("#message-wrapper").find(".card");
                     $.each(questionCards.find(".clap-count"), function(i, val){
@@ -279,7 +302,6 @@
                         $("#message-wrapper").prepend(questionCards[val[0]]);
                     });
                     bindClapEvent($(".clap-btn"));
-
                 }
             });
 
