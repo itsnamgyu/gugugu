@@ -6,8 +6,8 @@
 		GUGUGU.CO
 	</a>
 	{% if user.is_authenticated %}
-		<p class="navbar-text text-white">{% trans 'Welcome' %} {{ user.get_username }}</p>
+		<!--<p class="navbar-text text-white">{% trans 'Welcome' %} {{ user.get_username }}</p>-->
 	{% else %}
-		<a class="navbar-text text-white" href="{% url 'account_login' %}?next={{ request.path }}">{%  trans 'Sign In' %}</a>
+		<!--<a class="navbar-text text-white" href="{% url 'account_login' %}?next={{ request.path }}">{%  trans 'Sign In' %}</a>-->
 	{% endif %}
 </nav>
