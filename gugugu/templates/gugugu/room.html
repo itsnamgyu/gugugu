@@ -298,6 +298,7 @@
                     $.each(sortedQuestionClaps, function(i, val){
                         $("#message-wrapper").prepend(questionCards[val[0]]);
                     });
+                    bindClapEvent($(".clap-btn"));
 
                 }
             });
