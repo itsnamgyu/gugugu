@@ -55,11 +55,11 @@
 						<form id="message-form" class="d-flex" method="post">
 							{% csrf_token %}
 							{% if request.path == '/sg-talk/chat' %}
-								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="질문을 입력해주세요"></textarea>
-								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold" type="submit">올리기</button>
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3 t-16" placeholder="질문을 입력해주세요"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold t-16" type="submit">올리기</button>
 							{% else %}
-								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
-								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
+								<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3 t-16" placeholder="{% trans 'Enter Message' %}"></textarea>
+								<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default t-16" type="submit">Send</button>
 							{% endif %}
 						</form>
 					</div>
