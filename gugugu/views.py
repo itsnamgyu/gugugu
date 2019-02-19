@@ -68,6 +68,44 @@ def talk(request):
     })
 
 
+def talk_room(request):
+    registered = False
+    user: User = None
+    if request.user.is_authenticated:
+        user = request.user
+        registered = TalkRegistration.objects.filter(user=request.user).exists()
+    if not registered:
+        return redirect(reverse('talk'))
+
+    name = 'sg-talk'
+    registration = user.registration
+
+    room_query = Room.objects.filter(name=name)
+    if not room_query.exists():
+        with transaction.atomic():
+            if not room_query.exists():
+                Room(name=name, active=True).save()
+    room = room_query.get()
+
+    message_form = MessageForm(prefix='message')
+    member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
+    if member.exists():
+        member = member.get()
+    else:
+        member = Member(room=room, session_key=request.session.session_key, name=registration.name)
+
+    messages = member.retrieve_all_messages()[::-1]  # TODO: for some reason?
+    # TODO: is there any better logic?
+    for message in messages:
+        message.my_claps = message.get_my_claps_count(member.id)
+    return render(request, 'gugugu/room.html', {
+        'room': room,
+        'messages': messages,
+        'member': member,
+        'message_form': message_form,
+    })
+
+
 def talk_register(request):
     if request.user.is_authenticated:
         if TalkRegistration.objects.filter(user=request.user).exists():
