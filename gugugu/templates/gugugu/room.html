@@ -53,13 +53,23 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-9">
-					<div class="card p-2">
+					<div class="card p-2 mb-4">
 						<form id="message-form" class="d-flex" method="post">
 							{% csrf_token %}
 							<textarea name="message-text" rows="1" required="" maxlength="1024" id="id_message-text" class="form-control font-default flex-fill align-middle p-3" placeholder="{% trans 'Enter Message' %}"></textarea>
 							<button id="message-form-submit" class="btn btn-primary ml-2 py-3 font-weight-bold font-default" type="submit">Send</button>
 						</form>
 					</div>
+                    <div class="d-flex justify-content-end">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="sortOptions" id="sortLatest" value="latest" checked>
+                          <label class="form-check-label text-white" for="sortLatest">최신순 정렬</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="sortOptions" id="sortClaps" value="claps">
+                          <label class="form-check-label text-white" for="sortClaps">Clap 순 정렬</label>
+                        </div>
+                    </div>
 					<div id="message-wrapper" class="mx-1 my-4">
 						{% for message in messages %}
 							{% if message.member.name == member.name %}
@@ -249,6 +259,48 @@
               });
           }
           bindClapEvent($(".clap-btn"));
+
+          function sortProperties(obj, isNumericSort)
+            {
+                isNumericSort=isNumericSort || false; // by default text sort
+                var sortable=[];
+                for(var key in obj)
+                    if(obj.hasOwnProperty(key))
+                        sortable.push([parseInt(key), obj[key]]);
+                if(isNumericSort)
+                    sortable.sort(function(a, b)
+                    {
+                        return a[1]-b[1];
+                    });
+                else
+                    sortable.sort(function(a, b)
+                    {
+                        var x=a[1].toLowerCase(),
+                            y=b[1].toLowerCase();
+                        return x<y ? -1 : x>y ? 1 : 0;
+                    });
+                return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+            }
+
+            $('input[type=radio][name=sortOptions]').click(function() {
+                if (this.value == 'latest') {
+                    location.reload();
+                }
+                else if (this.value == 'claps') {
+                    const questionClaps = {};
+                    const questionCards = $("#message-wrapper").find(".card");
+                    $.each(questionCards.find(".clap-count"), function(i, val){
+                        questionClaps[i] = parseInt($(val).text());
+                    });
+                    const sortedQuestionClaps = sortProperties(questionClaps, true);
+
+                    $("#message-wrapper").empty();
+                    $.each(sortedQuestionClaps, function(i, val){
+                        $("#message-wrapper").prepend(questionCards[val[0]]);
+                    });
+
+                }
+            });
 
       });
 	</script>
