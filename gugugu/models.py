@@ -172,6 +172,7 @@ class TalkRegistration(models.Model):
     )
 
     department = models.CharField(max_length=25)
+    email = models.CharField(max_length=100)
     student_id = models.IntegerField()
     year = models.IntegerField()
     interest = models.CharField(max_length=100)
