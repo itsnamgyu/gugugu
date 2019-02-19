@@ -184,12 +184,12 @@ DEPLOY_ENVS = os.path.join(BASE_DIR, "envs.json")
 # if os.path.exists(DEV_ENVS): # Develop Env
 #     env_file = open(DEV_ENVS)
 if os.path.exists(DEPLOY_ENVS): # Deploy Env
+    print('Loading environment file "{}"'.format(DEPLOY_ENVS))
     env_file = open(DEPLOY_ENVS)
 else:
+    print('Could not find environment file "{}"'.format(DEPLOY_ENVS))
     env_file = None
 
-print(DEPLOY_ENVS)
-print(env_file)
 
 if env_file is None: # System environ
     try:
