@@ -79,10 +79,9 @@
 								<div class="card mt-2 px-4 py-3 my-message">
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
-
+									<span class="clap-count text-white d-none" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
 {#									<div class="clap-container">#}
 {#										<div class="clap-count-wrapper">#}
-{#											<span class="clap-count text-white" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>#}
 {#										</div>#}
 {#										<div class="clap-btn-wrapper">#}
 {#											<applause-button class="clap-btn" disabled#}
@@ -178,7 +177,7 @@
                               '<p class="text-white d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               {#'<div class="clap-container">' +#}
                               {#'<div class="clap-count-wrapper">' +#}
-                              {#'<span class="clap-count text-white" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +#}
+                              '<span class="clap-count text-white d-none" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
                               {#'</div>' +#}
                               {#'<div class="clap-btn-wrapper">' +#}
                               {#'<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="50" color="white" multiclap="true"/>' +#}
