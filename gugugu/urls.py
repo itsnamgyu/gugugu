@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from allauth.account.views import LoginView, LogoutView, SignupView
 from . import views
@@ -16,4 +16,7 @@ urlpatterns = [
     path('gu/login', LoginView.as_view(template_name='gugugu/login.html'), name='account_login'),
     path('gu/signup', SignupView.as_view(template_name='gugugu/signup.html'), name='account_signup'),
     path('gu/logout', LogoutView.as_view(), name='account_logout'),
+
+
+    path('', include('social_django.urls', namespace='social'))
 ]
