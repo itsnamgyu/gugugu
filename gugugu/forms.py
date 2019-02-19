@@ -29,4 +29,4 @@ class MessageForm(forms.ModelForm):
 class TalkRegistrationForm(forms.ModelForm):
     class Meta:
         model = models.TalkRegistration
-        fields = ['name', 'department', 'student_id', 'year', 'interest', 'career_path', 'inquiry']
+        fields = ['name', 'department', 'student_id', 'year', 'interest', 'career_path']

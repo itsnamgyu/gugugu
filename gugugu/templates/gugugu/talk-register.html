@@ -26,7 +26,6 @@
 					</div>
 				</div>
 				<div class="row justify-content-center">
-					{{ form }}
 					{% csrf_token %}
 					<div class="col-6 col-md-5 col-lg-4 text-left mt-5">
 						<div class="form-group">
@@ -37,7 +36,7 @@
 							<label for="id_department">학과</label>
 {#							<input class="form-control" type="text" name="department" maxlength="25" required="" id="id_department">#}
                             <div class="dropdown">
-                                <select class="custom-select" name="name" id="id_department" required>
+                                <select class="custom-select" name="department" id="id_department" required>
                                   <option selected>학과를 선택해주세요</option>
                                   <option value="컴퓨터학과">컴퓨터학과</option>
                                   <option value="경영학과">경영학과</option>
@@ -75,14 +74,16 @@
                             <div class="dropdown">
                                 <select class="custom-select"  name="interest" id="id_interest" required>
                                   <option selected>관심 분야를 선택해주세요</option>
-                                  <option value="General Software">General Software</option>
-                                  <option value="General Hardware">General Hardware</option>
                                   <option value="AI/ML">AI/ML</option>
-                                  <option value="UI/UX">UI/UX</option>
-                                  <option value="Business/Marketing">Business/Marketing</option>
                                   <option value="Robotics">Robotics</option>
                                   <option value="System">System</option>
                                   <option value="Theory">Theory</option>
+                                  <option value="HCI">HCI</option>
+                                  <option value="UI/UX">UI/UX</option>
+                                  <option value="Data science">Data science</option>
+                                  <option value="Business/Marketing">Business/Marketing</option>
+                                  <option value="General Software">General Software</option>
+                                  <option value="General Hardware">General Hardware</option>
                                   <option value="기타">기타</option>
                                 </select>
                             </div>
@@ -105,8 +106,8 @@
                             </div>
 						</div>
 
-{#						<label for="id_inquiry">질문 사항</label>#}
-{#						<textarea class="form-control" name="inquiry" cols="40" rows="10" required="" id="id_inquiry"></textarea>#}
+						<label for="id_inquiry">질문 사항</label>
+						<textarea class="form-control" name="inquiry" cols="40" rows="10" required="" id="id_inquiry"></textarea>
 
 						{{ form.errors }}
 						<button type="submit" class="btn btn-primary ml-auto mt-3 float-right">등록</button>

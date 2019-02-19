@@ -176,7 +176,7 @@ class TalkRegistration(models.Model):
     year = models.IntegerField()
     interest = models.CharField(max_length=100)
     career_path = models.CharField(max_length=100)
-    inquiry = models.TextField()
+    # inquiry = models.TextField()
 
     def __str__(self):
         return '{} [{}, {}]'.format(self.name, self.department, self.year)
