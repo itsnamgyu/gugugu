@@ -6,7 +6,7 @@
 		GUGUGU.CO
 	</a>
 	{% if user.registration %}
-		<p class="navbar-text text-white">안녕하세요, {{ user.registration.name }}님!</p>
+		<p class="navbar-text text-white my-auto">안녕하세요, {{ user.registration.name }}님!</p>
 	{% else %}
 		<!--<a class="navbar-text text-white" href="{% url 'account_login' %}?next={{ request.path }}">{%  trans 'Sign In' %}</a>-->
 	{% endif %}
