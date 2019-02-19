@@ -124,9 +124,6 @@ class Member(models.Model):
             date_sent__lt=self.date_updated).reverse())
         return messages
 
-    class Meta:
-        unique_together = ('room', 'user')
-
     @property
     def registered(self):
         return self.user is not None

@@ -54,7 +54,6 @@ def talk(request):
     :param request:
     :return:
     """
-
     registered = False
     user = None
     if request.user.is_authenticated:
