@@ -48,6 +48,10 @@ def index(request):
     })
 
 
+def talk_redirect(request):
+    return redirect(reverse('talk_redirect'))
+
+
 def talk(request):
     """
     Custom view for sg seminar event!
