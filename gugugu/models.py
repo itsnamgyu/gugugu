@@ -161,7 +161,7 @@ class Clap(models.Model):
 
 
 class TalkRegistration(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='registration')
     name = models.CharField(max_length=25)
 
     YEAR_IN_SCHOOL_CHOICES = (
