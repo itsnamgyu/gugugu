@@ -97,7 +97,7 @@ class Member(models.Model):
     date_updated = models.DateTimeField(default=timezone.now)
     date_joined = models.DateTimeField(default=timezone.now)
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def retrieve_new_messages(self, n=300):
         # TODO: need to limit the number of chats... (but how?)
