@@ -226,7 +226,7 @@
                               $.ajax({
                                   type: "POST",
                                   // TODO: change below strings to template url...
-                                  url: "gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                                  url: "/gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
                                   data: {claps: newClaps["messageId"]},
                                   success: function (msg) {
                                       delete newClaps["messageId"];
