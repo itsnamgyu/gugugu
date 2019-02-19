@@ -65,6 +65,18 @@ html {
     height: 100vh;
 }
 
+.text-888 {
+    color: #888;
+}
+
+.text-444 {
+    color: #444;
+}
+
+.text-222 {
+    color: #222;
+}
+
 .font-weight-light {
     font-weight: 300 !important;
 }
