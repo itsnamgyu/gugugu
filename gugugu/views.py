@@ -94,8 +94,8 @@ def talk_room(request):
         member = Member(room=room, session_key=request.session.session_key, name=registration.name)
         member.user = user
         member.save()
-
-    messages = member.retrieve_all_messages()[::-1]  # TODO: for some reason?
+        
+    messages = member.retrieve_all_messages()[::-1] # TODO: for some reason?
     # TODO: is there any better logic?
     for message in messages:
         message.my_claps = message.get_my_claps_count(member.id)
