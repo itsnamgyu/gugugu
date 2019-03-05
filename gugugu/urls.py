@@ -18,5 +18,11 @@ urlpatterns = [
     path('gu/signup', SignupView.as_view(template_name='gugugu/signup.html'), name='account_signup'),
     path('gu/logout', LogoutView.as_view(), name='account_logout'),
 
+    # admin
+    path('gu/sg-admin', views.admin, name='admin'),
+    path('gu/sg-admin/stats', views.admin_stats, name='admin_stats'),
+    path('gu/sg-admin/questions-claps', views.admin_questions_claps, name='admin_claps'),
+    path('gu/sg-admin/questions-time', views.admin_questions_time, name='admin_time'),
+
     path('', include('social_django.urls', namespace='social')),
 ]

@@ -27,3 +27,11 @@
     font-weight: 700;
     margin-bottom: 0.3em;
 }
+
+.question-meta {
+    font-size: 1em;
+}
+
+.question {
+    font-size: 1.2em;
+}

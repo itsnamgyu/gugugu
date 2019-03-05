@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.db.models import Count, Sum
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -140,6 +141,9 @@ class Message(models.Model):
 
     date_claps_updated = models.DateTimeField(_('Date Claps Updated'), default=timezone.now)
 
+    def clap_count(self):
+        return self.claps.count()
+
     def get_my_claps_count(self, member_id):
         member_message_claps = self.claps.filter(member_id=member_id)
         return member_message_claps.count()
@@ -175,6 +179,28 @@ class TalkRegistration(models.Model):
     interest = models.CharField(max_length=100)
     career_path = models.CharField(max_length=100)
     # inquiry = models.TextField()
+
+    def claps_sent(self):
+        sent = 0
+        for member in self.user.member_set.all():
+            sent += member.claps.count()
+        return sent
+
+    def claps_received(self):
+        claps = 0
+        for member in self.user.member_set.all():
+            stat = member.message_set.annotate(claps_received=Count('claps')).aggregate(Sum('claps_received'))
+            claps_received_by_member = stat['claps_received__sum']
+            if claps_received_by_member is None:
+                claps_received_by_member = 0
+            claps += claps_received_by_member
+        return claps
+
+    def messages_sent(self):
+        messages = 0
+        for member in self.user.member_set.all():
+            messages += member.message_set.count()
+        return messages
 
     def __str__(self):
         return '{} [{}, {}]'.format(self.name, self.department, self.year)

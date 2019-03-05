@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+	GUGUGU - 서강대 패널 토크
+{% endblock %}
+
+{% block head %}
+	<meta name="description" content="구구구, 쫌 쓸맛나는 오픈채팅 서비스. PC, 모바일 어디서든 사용 가능한 오픈채팅!">
+	<link rel="stylesheet" href="{% static 'gugugu/css/hero.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/talk.css' %}">
+	<link rel="stylesheet" href="{% static 'gugugu/css/background.css' %}">
+{% endblock %}
+
+{% block body %}
+	{% include 'nav.html' %}
+	<canvas id="canvas-background"> </canvas>
+	<img id="sogang-shadow" src="{% static 'img/sogang-black.png' %}">
+	<img id="partner-shadow" src="{% static 'img/logo-big-shadow.png' %}">
+	<div class="position-relative text-center">
+	<div class="w-100 d-flex justify-content-center flex-column py-5 my-5">
+		<div class="inner-wrapper mt-auto mb-auto justify-content-center">
+			<div class="container">
+				<h3 class="font-weight-bold text-white mt-5">✨ 2019 서강대 패널 토크 ✨</h3>
+				<h5 class="font-weight-light text-white">관리자 페이지😏</h5>
+				<div class="row justify-content-center mt-5">
+					<a href="{% url 'admin_stats' %}"><button class="btn btn-pill btn-light mx-2"><i class="fas fa-chart-pie mr-2"></i>전체 통계</button></a>
+					<a href="{% url 'admin_claps' %}"><button class="btn btn-pill btn-primary mx-2"><i class="fas fa-star mr-2"></i>Claps순 질문</button></a>
+					<a href="{% url 'admin_time' %}"><button class="btn btn-pill btn-light mx-2"><i class="fas fa-clock mr-2"></i>최신순 질문</button></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container pb-5 mb-5">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-12 col-lg-10 text-left">
+				{% for message in messages %}
+					<div class="card mb-3 p-4">
+						<div class="d-flex">
+							<p class="mr-auto mb-0 question-meta"><span class="text-black font-weight-bold">{{ message.member.user.registration.name }}</span> ·
+								{{ message.member.user.registration.department }} ·
+								{% if message.member.user.registration.year == 5 %}
+									졸업생
+								{% else %}
+									{{ message.member.user.registration.year }}학년
+								{% endif %}
+							</p>
+							<p class="font-weight-bold mb-0 question-meta">{{ message.clap_count }}</p>
+						</div>
+						<p class="mt-3 mb-0 question text-444">{{ message.text }}</p>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body_script %}
+	<script src="{% static 'vendor/granim.min.js' %}"></script>
+	<script src="{% static 'gugugu/js/index.js' %}"></script>
+	<script src="{% static 'gugugu/js/background.js' %}"></script>
+{% endblock %}

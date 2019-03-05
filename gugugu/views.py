@@ -131,6 +131,78 @@ def talk_register(request):
     })
 
 
+def admin(request):
+    return redirect(reverse('admin_stats'))
+
+
+def admin_stats(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            claps_received=reg.claps_received(),
+            claps_sent=reg.claps_sent(),
+            messages_sent=reg.messages_sent(),
+        ))
+
+    # sorted TalkRegistration dicts
+    claps_received = sorted(reg_dicts, key=lambda d: d['claps_received'], reverse=True)[:5]
+    claps_sent = sorted(reg_dicts, key=lambda d: d['claps_sent'], reverse=True)[:5]
+    messages_sent = sorted(reg_dicts, key=lambda d: d['messages_sent'], reverse=True)[:5]
+
+    total_claps = 0
+    total_messages = 0
+    for d in reg_dicts:
+        total_claps += d['claps_received']
+        total_messages += d['messages_sent']
+    total_registrations = TalkRegistration.objects.all().count()
+
+    stats = dict(
+        total_claps=total_claps,
+        total_messages=total_messages,
+        total_registrations=total_registrations,
+    )
+
+    departments = [
+        '컴퓨터공학과',
+        '경영학과',
+        '아트앤테크놀로지',
+        '전자공학',
+        '기타',
+    ]
+    registrations_by_department = dict()
+    for department in departments:
+        registrations_by_department[department] = TalkRegistration.objects.filter(department=department).count()
+
+    return render(request, 'gugugu/admin-stats.html', {
+        'stats': stats,
+        'registrations_by_department': registrations_by_department,
+        'd_by_claps_received': claps_received,
+        'd_by_claps_sent': claps_sent,
+        'd_by_messages_sent': messages_sent,
+    })
+
+
+def admin_questions_claps(request):
+    sg_room = Room.objects.all().get(name='sg-talk')
+    messages = Message.objects.all().filter(room=sg_room).annotate(clap_count=Count('claps')).order_by('-clap_count')
+
+    return render(request, 'gugugu/admin-questions-claps.html', {
+        'messages': messages,
+    })
+
+
+def admin_questions_time(request):
+    sg_room = Room.objects.all().get(name='sg-talk')
+    messages = Message.objects.all().filter(room=sg_room).order_by('-date_sent')
+
+    return render(request, 'gugugu/admin-questions-time.html', {
+        'messages': messages,
+    })
+
+
 def room(request, name):
     room = get_object_or_404(Room, name=name, active=True)
     member = Member.objects.all().filter(room=room, session_key=request.session.session_key)
