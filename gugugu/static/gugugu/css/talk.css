@@ -29,10 +29,11 @@
 }
 
 .question-meta {
-    font-size: 1.1em;
+    font-size: 1.0em;
 }
 
 .question {
-    font-size: 1.3em;
-    line-height: 1.8;
+    font-size: 1.2em;
+    line-height: 2;
+    font-family: sans-serif !important;
 }

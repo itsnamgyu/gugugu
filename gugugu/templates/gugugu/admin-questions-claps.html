@@ -36,7 +36,7 @@
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-12 col-lg-11 col-xl-10 text-left">
 				{% for message in messages %}
-					<div class="card mb-3 p-4">
+					<div class="card mb-3 p-5">
 						<div class="d-flex">
 							<p class="mr-auto mb-0 question-meta"><span class="text-black font-weight-bold">{{ message.member.user.registration.name }}</span> ·
 								{{ message.member.user.registration.department }} ·
@@ -48,7 +48,7 @@
 							</p>
 							<p class="font-weight-bold mb-0 question-meta">{{ message.clap_count }}</p>
 						</div>
-						<p class="mt-3 mb-0 question text-444">{{ message.text }}</p>
+						<p class="mt-3 mb-0 question text-222">{{ message.text }}</p>
 					</div>
 				{% endfor %}
 			</div>
