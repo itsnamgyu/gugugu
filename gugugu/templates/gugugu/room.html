@@ -278,13 +278,11 @@
               return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
           }
 
-          $('.sort-button').click(function() {
-              if (this.id === 'sortLatest') {
+          function sortLatest() {
                   const questionIds = {};
                   const questionCardsId = $("#message-wrapper").find(".card");
                   $.each(questionCardsId.find(".clap-count"), function(i, val){
-                      questionIds[i] = parseInt($(val).attr('data-message-id'))
-                      console.log(questionIds[i])
+                      questionIds[i] = parseInt($(val).attr('data-message-id'));
                   });
                   const sortedQuestionIds = sortProperties(questionIds, true);
 
@@ -293,8 +291,9 @@
                       $("#message-wrapper").prepend(questionCardsId[val[0]]);
                   });
                   bindClapEvent($(".clap-btn"));
-              }
-              else if (this.id === 'sortClaps') {
+          }
+
+          function sortClaps() {
                   const questionClaps = {};
                   const questionCards = $("#message-wrapper").find(".card");
                   $.each(questionCards.find(".clap-count"), function(i, val){
@@ -307,6 +306,16 @@
                       $("#message-wrapper").prepend(questionCards[val[0]]);
                   });
                   bindClapEvent($(".clap-btn"));
+          }
+
+          {#sortClaps();#}
+
+          $('.sort-button').click(function() {
+              if (this.id === 'sortLatest') {
+                  sortLatest();
+              }
+              else if (this.id === 'sortClaps') {
+                  sortClaps();
               }
           });
 

@@ -122,7 +122,7 @@ class Member(models.Model):
         self.save()
         messages = list(self.room.message_set.all().filter(
         #   date_sent__gt=self.date_joined, date_sent__lt=self.date_updated).reverse()[:300])
-            date_sent__lt=self.date_updated).reverse())
+            date_sent__lt=self.date_updated).reverse().annotate(clap_counts=Count('claps')).order_by('-clap_counts', '-date_sent'))
         return messages
 
     @property
