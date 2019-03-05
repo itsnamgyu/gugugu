@@ -1,5 +1,6 @@
 from django.db import models, transaction
 from django.db.models import Count, Sum
+from django.db.models.functions import Length
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -201,6 +202,16 @@ class TalkRegistration(models.Model):
         for member in self.user.member_set.all():
             messages += member.message_set.count()
         return messages
+
+    def characters_sent(self):
+        characters = 0
+        for member in self.user.member_set.all():
+            stats = member.message_set.annotate(text_length=Length('text')).aggregate(Sum('text_length'))
+            characters_sent_by_member = stats['text_length__sum']
+            if characters_sent_by_member is None:
+                characters_sent_by_member = 0
+            characters += characters_sent_by_member
+        return characters
 
     def __str__(self):
         return '{} [{}, {}]'.format(self.name, self.department, self.year)

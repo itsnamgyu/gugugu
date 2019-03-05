@@ -145,12 +145,13 @@ def admin_stats(request):
             claps_received=reg.claps_received(),
             claps_sent=reg.claps_sent(),
             messages_sent=reg.messages_sent(),
+            characters_sent=reg.characters_sent(),
         ))
 
     # sorted TalkRegistration dicts
     claps_received = sorted(reg_dicts, key=lambda d: d['claps_received'], reverse=True)[:5]
     claps_sent = sorted(reg_dicts, key=lambda d: d['claps_sent'], reverse=True)[:5]
-    messages_sent = sorted(reg_dicts, key=lambda d: d['messages_sent'], reverse=True)[:5]
+    characters_sent = sorted(reg_dicts, key=lambda d: d['characters_sent'], reverse=True)[:5]
 
     total_claps = 0
     total_messages = 0
@@ -181,7 +182,7 @@ def admin_stats(request):
         'registrations_by_department': registrations_by_department,
         'd_by_claps_received': claps_received,
         'd_by_claps_sent': claps_sent,
-        'd_by_messages_sent': messages_sent,
+        'd_by_characters_sent': characters_sent,
     })
 
 
