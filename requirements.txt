@@ -1,3 +1,4 @@
 django
 flake8
 pandas
+django-ratelimit
