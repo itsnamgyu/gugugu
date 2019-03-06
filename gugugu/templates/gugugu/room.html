@@ -216,16 +216,15 @@
               });
           });
 
-          /*
-          let timeout = setTimeout(fetchMessages, wait);
+          const restart_wait = 10000;
+          fetchMessages();
           setInterval(function() {
               if (fetches === 0) {
                   clearTimeout(timeout);
                   timeout = setTimeout(fetchMessages, wait);
               }
               fetches = 0;
-          }, 2000);
-          */
+          }, 10000);
 
           function bindClapEvent($clapBtn) {
               $clapBtn.click(function(){

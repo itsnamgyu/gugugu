@@ -5,6 +5,7 @@ from .models import *
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils import timezone
+from ratelimit.decorators import ratelimit
 from django.db.utils import IntegrityError
 
 
@@ -257,6 +258,7 @@ def room(request, name):
         })
 
 
+@ratelimit(key='ip', rate='1/3s')
 def room_ajax(request, pk):
     room = get_object_or_404(Room, pk=pk)
     member = get_object_or_404(Member, room=room, session_key=request.session.session_key)
@@ -298,6 +300,7 @@ def room_ajax(request, pk):
     return JsonResponse(data)
 
 
+@ratelimit(key='ip', rate='1/3s')
 def clap_ajax(request, room_id, message_id):
     room = get_object_or_404(Room, pk=room_id)
     message = get_object_or_404(Message, pk=message_id)
