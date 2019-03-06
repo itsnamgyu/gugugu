@@ -6,6 +6,8 @@ from django.core.validators import validate_slug
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.models import User
 from django.utils import timezone
+from collections import defaultdict
+import pandas as pd
 
 
 class Comment(models.Model):
@@ -212,6 +214,20 @@ class TalkRegistration(models.Model):
                 characters_sent_by_member = 0
             characters += characters_sent_by_member
         return characters
+
+    @staticmethod
+    def export_as_csv(path):
+        fields = [
+            'name', 'department', 'student_id', 'email', 'year', 'interest', 'career_path',
+        ]
+        data_dict = defaultdict(list)
+
+        for reg in TalkRegistration.objects.all():
+            for field in fields:
+                data_dict[field].append(getattr(reg, field))
+
+        data = pd.DataFrame(data_dict)
+        data.to_csv(path)
 
     def __str__(self):
         return '{} [{}, {}]'.format(self.name, self.department, self.year)
