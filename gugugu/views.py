@@ -94,7 +94,7 @@ def talk_room(request):
         member = Member(room=room, session_key=request.session.session_key, name=registration.name)
         member.user = user
         member.save()
-        
+
     messages = member.retrieve_all_messages()[::-1] # TODO: for some reason?
     # TODO: is there any better logic?
     for message in messages:
@@ -298,12 +298,21 @@ def room_ajax(request, pk):
     return JsonResponse(data)
 
 
-def clap_ajax(request, room_id, message_id):
+def message_ajax(request, room_id, message_id):
     room = get_object_or_404(Room, pk=room_id)
     message = get_object_or_404(Message, pk=message_id)
     member = get_object_or_404(Member, room=room, session_key=request.session.session_key)
     clap_count = request.POST.get('claps')
 
+    data = {
+        'memberId': member.id,
+        'messageId': message.id,
+    }
+
+    """
+    If ajax method is Post, it's clapping the message.
+    If DELETE, it's deleting the message.
+    """
     if request.method == 'POST':
         if Clap.objects.filter(message=message, member=member).count() < 50:
             with transaction.atomic():
@@ -314,11 +323,12 @@ def clap_ajax(request, room_id, message_id):
             message.save()
             room.date_updated = timezone.now()
 
+    if request.method == 'DELETE':
+        if request.user.is_superuser:
+            message.delete()
+            room.date_updated = timezone.now()
+
     room.save()
-    data = {
-        'memberId': member.id,
-        'messageId': message.id,
-    }
     return JsonResponse(data)
 
 

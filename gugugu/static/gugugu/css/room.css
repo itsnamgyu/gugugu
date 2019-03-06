@@ -78,6 +78,14 @@
 .clap-container .clap-btn-wrapper {
     margin-left: 10px;
 }
+#message-wrapper .card .message-delete-btn {
+    position: absolute;
+    right: 22.5px;
+    top:15px;
+    cursor: pointer;
+}
+
+
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   select,

@@ -74,6 +74,11 @@
 									<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">{{ message.member.name }}</h5>
 									<p class="text-white d-inline-block m-0 message-text font-default">{{ message.text }}</p>
 									<span class="clap-count text-white d-none" data-message-id="{{ message.id }}">{{ message.claps.count }}</span>
+                                    {% if user.is_superuser %}
+                                    <div class="message-delete-btn" data-message-pk="{{ message.id }}">
+                                        <span class="badge badge-pill badge-danger">삭제</span>
+                                    </div>
+                                    {% endif %}
 								</div>
 							{% else %}
 								<div class="card mt-2 px-4 py-3">
@@ -90,6 +95,11 @@
 											                 color="#56e" multiclap="true"></applause-button>
 										</div>
 									</div>
+                                    {% if user.is_superuser %}
+                                    <div class="message-delete-btn" data-message-pk="{{ message.id }}">
+                                        <span class="badge badge-pill badge-danger">삭제</span>
+                                    </div>
+                                    {% endif %}
 								</div>
 							{% endif %}
 						{% endfor %}
@@ -159,7 +169,14 @@
                               '<h5 class="text-white d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
                               '<p class="text-white d-inline-block m-0 message-text font-default">' + ho.escape(value.text) + '</p>' +
                               '<span class="clap-count text-white d-none" data-message-id="' + value.pk + '">' + value.claps  + '</span>' +
+                              {% if user.is_superuser %}
+                                  '<div class="message-delete-btn" data-message-pk="' + value.pk + '">' +
+                                    ' <span class="badge badge-pill badge-danger">삭제</span>' +
+                                  '</div>' +
+                              {% endif %}
                               '</div>'
+
+
                       } else {
                           content = '<div class="card mt-2 px-4 py-3">' +
                               '<h5 class="d-inline-block m-0 message-name font-weight-bold font-default">' + ho.escape(value.sender) + '</h5>' +
@@ -171,10 +188,18 @@
                               '<div class="clap-btn-wrapper">' +
                               '<applause-button class="clap-btn" data-message-pk="' + value.pk + '" data-my-claps="0" color="#56e" multiclap="true"/>' +
                               '</div>' +
+                              {% if user.is_superuser %}
+                                  '<div class="message-delete-btn" data-message-pk="' + value.pk + '">' +
+                                    ' <span class="badge badge-pill badge-danger">삭제</span>' +
+                                  '</div>' +
+                              {% endif %}
                               '</div>'
                       }
                       $content = $(content);
                       bindClapEvent($content.find(".clap-btn"));
+                      {% if user.is_superuser %}
+                      bindMessageDeleteEvent ($content.find(".message-delete-btn"));
+                      {% endif %}
                       messageWrapper.prepend($content);
                   });
               }
@@ -279,36 +304,40 @@
           }
 
           function sortLatest() {
-                  const questionIds = {};
-                  const questionCardsId = $("#message-wrapper").find(".card");
-                  $.each(questionCardsId.find(".clap-count"), function(i, val){
-                      questionIds[i] = parseInt($(val).attr('data-message-id'));
-                  });
-                  const sortedQuestionIds = sortProperties(questionIds, true);
+              const questionIds = {};
+              const questionCardsId = $("#message-wrapper").find(".card");
+              $.each(questionCardsId.find(".clap-count"), function(i, val){
+                  questionIds[i] = parseInt($(val).attr('data-message-id'));
+              });
+              const sortedQuestionIds = sortProperties(questionIds, true);
 
-                  $("#message-wrapper").empty();
-                  $.each(sortedQuestionIds, function(i, val){
-                      $("#message-wrapper").prepend(questionCardsId[val[0]]);
-                  });
-                  bindClapEvent($(".clap-btn"));
+              $("#message-wrapper").empty();
+              $.each(sortedQuestionIds, function(i, val){
+                  $("#message-wrapper").prepend(questionCardsId[val[0]]);
+              });
+              bindClapEvent($(".clap-btn"));
+              {% if user.is_superuser %}
+              bindMessageDeleteEvent ($(".message-delete-btn"));
+              {% endif %}
           }
 
           function sortClaps() {
-                  const questionClaps = {};
-                  const questionCards = $("#message-wrapper").find(".card");
-                  $.each(questionCards.find(".clap-count"), function(i, val){
-                      questionClaps[i] = parseInt($(val).text());
-                  });
-                  const sortedQuestionClaps = sortProperties(questionClaps, true);
+              const questionClaps = {};
+              const questionCards = $("#message-wrapper").find(".card");
+              $.each(questionCards.find(".clap-count"), function(i, val){
+                  questionClaps[i] = parseInt($(val).text());
+              });
+              const sortedQuestionClaps = sortProperties(questionClaps, true);
 
-                  $("#message-wrapper").empty();
-                  $.each(sortedQuestionClaps, function(i, val){
-                      $("#message-wrapper").prepend(questionCards[val[0]]);
-                  });
-                  bindClapEvent($(".clap-btn"));
+              $("#message-wrapper").empty();
+              $.each(sortedQuestionClaps, function(i, val){
+                  $("#message-wrapper").prepend(questionCards[val[0]]);
+              });
+              bindClapEvent($(".clap-btn"));
+              {% if user.is_superuser %}
+              bindMessageDeleteEvent ($(".message-delete-btn"));
+              {% endif %}
           }
-
-          {#sortClaps();#}
 
           $('.sort-button').click(function() {
               if (this.id === 'sortLatest') {
@@ -318,6 +347,24 @@
                   sortClaps();
               }
           });
+
+          {% if user.is_superuser %}
+          function bindMessageDeleteEvent ($messageDeleteBtn) {
+              $messageDeleteBtn.click(function () {
+                  const messageId = $(this).data("messagePk");
+                  const messageCardDom = $(this).closest(".card");
+                  $.ajax({
+                      type: "DELETE",
+                      // TODO: change below strings to template url...
+                      url: "/gu/ajax/room/" + "{{ room.pk }}" + "/message/" + messageId,
+                      success: function (msg) {
+                          messageCardDom.remove();
+                      },
+                  });
+              });
+          }
+          bindMessageDeleteEvent($(".message-delete-btn"));
+          {% endif %}
 
       });
 	</script>
