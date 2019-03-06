@@ -68,6 +68,15 @@
 						<button class="btn btn-pill btn-primary mr-2 sort-button" id="sortClaps"><i class="fas fa-sort-amount-down mr-2"></i>Clap순</button>
 					</div>
 					<div id="message-wrapper" class="mx-1 my-4">
+
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">
+                                <i class="fas fa-search"></i>
+                            </span>
+                          </div>
+                          <input id="search-input" type="text" placeholder="질문을 검색해주세요" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
 						{% for message in messages %}
 							{% if message.member.name == member.name %}
 								<div class="card mt-2 px-4 py-3 my-message">
@@ -93,6 +102,7 @@
 								</div>
 							{% endif %}
 						{% endfor %}
+                        <p id="question-not-found" class="d-none text-white">검색한 질문이 없습니다.</p>
 					</div>
 				</div>
 			</div>
@@ -308,8 +318,6 @@
                   bindClapEvent($(".clap-btn"));
           }
 
-          {#sortClaps();#}
-
           $('.sort-button').click(function() {
               if (this.id === 'sortLatest') {
                   sortLatest();
@@ -318,6 +326,55 @@
                   sortClaps();
               }
           });
+
+
+
+          // Question Search
+            $("#search-input").on("change paste keyup", function() {
+                let query = $(this).val();
+                if(query == "") {
+                    getQuestions(query, true)
+                } else {
+                    getQuestions(query, false)
+                }
+            })
+
+            function getQuestions(query, isEmpty) {
+                // ignore when typing is not finished.
+                const jaeum = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ","ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ","ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"]
+                if(jaeum.includes(query[query.length-1])) {
+                    return;
+                };
+
+                // find by text or name
+                let isSearchedQuestions = $.map($("#message-wrapper .card"), function(val, i){
+                  return $(val).find(".message-text").text().includes(query) || $(val).find(".message-name").text().includes(query);
+                });
+
+                let isNotFound = isSearchedQuestions.every(function (isFound) {
+                    return !isFound
+                });
+
+
+                if(isEmpty) {
+                    $("#message-wrapper .card").removeClass("d-none");
+                    $("#question-not-found").addClass("d-none");
+                } else {
+                    if(isNotFound) {
+                        $("#message-wrapper .card").addClass("d-none");
+                        $("#question-not-found").removeClass("d-none");
+                    } else {
+                        $("#question-not-found").addClass("d-none");
+                        $.each($("#message-wrapper .card"), function (index, question) {
+                            if(isSearchedQuestions[index]) {
+                                $(question).removeClass("d-none");
+                            } else {
+                                $(question).addClass("d-none");
+                            }
+                        });
+                    }
+                }
+            }
 
       });
 	</script>
