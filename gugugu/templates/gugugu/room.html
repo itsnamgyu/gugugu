@@ -199,7 +199,7 @@
               return false;
           });
 
-          const wait = 1000;
+          const wait = 4000;
           let fetchMessages;
           let fetches = 0;
           (fetchMessages = function() {
@@ -216,6 +216,7 @@
               });
           });
 
+          /*
           let timeout = setTimeout(fetchMessages, wait);
           setInterval(function() {
               if (fetches === 0) {
@@ -224,6 +225,7 @@
               }
               fetches = 0;
           }, 2000);
+          */
 
           function bindClapEvent($clapBtn) {
               $clapBtn.click(function(){
@@ -248,7 +250,7 @@
                                       delete newClaps["messageId"];
                                   },
                               });
-                          }, 3000);
+                          }, 4000);
                       }
                   }
                   return false;
