@@ -38,7 +38,7 @@
 				{% for message in messages %}
 					<div class="card mb-3 p-4">
 						<div class="d-flex">
-							<p class="mr-auto mb-0 question-meta"><span class="text-black font-weight-bold">{{ message.member.user.registration.name }}</span> ·
+							<p class="mr-auto mb-0 question-meta"><span class="text-black font-weight-bold">{{ message.pk }}. {{ message.member.user.registration.name }}</span> ·
 								{{ message.member.user.registration.department }} ·
 								{% if message.member.user.registration.year == 5 %}
 									졸업생
