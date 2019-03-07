@@ -35,7 +35,12 @@
 						</div>
 					{% else %}
 						{% if user %}
-							<p class="font-weight text-white font-weight-bold mt-5">신청을 완료해주세요!</p>
+							<div class="row justify-content-center">
+								<div class="col-11 col-md-8 col-lg-6">
+									<p class="font-weight text-white font-weight-bold mt-5">신청을 완료해주세요! 예상보다 훨씬 많은 분들이 신청을
+										해주셔서 행사장 여건상 당일 신청자 분들께서는 착석이 어려우실 수 있습니다.</p>
+								</div>
+							</div>
 							<div class="row justify-content-center">
 								<div class="col-11 col-md-8 col-lg-6 text-left">
 									<a href="{% url 'talk_register' %}">
