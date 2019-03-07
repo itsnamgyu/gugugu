@@ -178,11 +178,76 @@ def admin_stats(request):
     for department in departments:
         registrations_by_department[department] = TalkRegistration.objects.filter(department=department).count()
 
+    registrations_by_year = dict()
+    for year in range(1, 6):
+        if year == 5:
+            key = '졸업생'
+        else:
+            key = '{}학년'.format(year)
+        registrations_by_year[key] = TalkRegistration.objects.filter(year=year).count()
+
+
+
     return render(request, 'gugugu/admin-stats.html', {
         'stats': stats,
         'registrations_by_department': registrations_by_department,
+        'registrations_by_year': registrations_by_year,
         'd_by_claps_received': claps_received,
         'd_by_claps_sent': claps_sent,
+        'd_by_characters_sent': characters_sent,
+    })
+
+
+def admin_clapper(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            claps_sent=reg.claps_sent(),
+        ))
+
+    # sorted TalkRegistration dicts
+    claps_sent = sorted(reg_dicts, key=lambda d: d['claps_sent'], reverse=True)
+
+    return render(request, 'gugugu/admin-clapper.html', {
+        'd_by_claps_sent': claps_sent,
+    })
+
+
+def admin_popular(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            claps_received=reg.claps_received(),
+        ))
+
+    # sorted TalkRegistration dicts
+    claps_received = sorted(reg_dicts, key=lambda d: d['claps_received'], reverse=True)
+
+    return render(request, 'gugugu/admin-popular.html', {
+        'd_by_claps_received': claps_received,
+    })
+
+
+def admin_typer(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            characters_sent=reg.characters_sent(),
+        ))
+
+    # sorted TalkRegistration dicts
+    characters_sent = sorted(reg_dicts, key=lambda d: d['characters_sent'], reverse=True)
+
+    return render(request, 'gugugu/admin-typer.html', {
         'd_by_characters_sent': characters_sent,
     })
 

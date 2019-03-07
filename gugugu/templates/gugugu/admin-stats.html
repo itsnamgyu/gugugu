@@ -52,6 +52,14 @@
 							</div>
 						</li>
 						{% endfor %}
+						{% for year, count in registrations_by_year.items %}
+							<li class="list-group-item">
+								<div class="d-flex my-1">
+									<p class="m-0 mr-auto">{{ year }}</p>
+									<p class="m-0">{{ count }}</p>
+								</div>
+							</li>
+						{% endfor %}
 					</ul>
 				</div>
 				<h5 class="text-white mt-5 font-weight-bold">질문 통계</h5>
@@ -93,7 +101,10 @@
 						{% endfor %}
 					</ul>
 				</div>
-				<h5 class="text-white mt-5 font-weight-bold">박수꾼</h5>
+				<div class="w-100 text-right">
+					<a href="{% url 'admin_popular' %}"><button class="btn btn-primary mt-3 ml-auto">모두 보기</button></a>
+				</div>
+				<h5 class="text-white mt-4 font-weight-bold">박수꾼</h5>
 				<p class="text-white mb-2">박수를 가장 많이 보낸 사람</p>
 				<div class="card">
 					<ul class="list-group">
@@ -114,7 +125,10 @@
 						{% endfor %}
 					</ul>
 				</div>
-				<h5 class="text-white mt-5 font-weight-bold">정성스러운 질문자</h5>
+				<div class="w-100 text-right">
+					<a href="{% url 'admin_popular' %}"><button class="btn btn-primary mt-3 ml-auto">모두 보기</button></a>
+				</div>
+				<h5 class="text-white mt-4 font-weight-bold">정성스러운 질문자</h5>
 				<p class="text-white mb-2">질문을 가장 길게 작성한 사람</p>
 				<div class="card">
 					<ul class="list-group">
@@ -134,6 +148,9 @@
 							</li>
 						{% endfor %}
 					</ul>
+				</div>
+				<div class="w-100 text-right">
+					<a href="{% url 'admin_popular' %}"><button class="btn btn-primary mt-3 ml-auto">모두 보기</button></a>
 				</div>
 			</div>
 		</div>
