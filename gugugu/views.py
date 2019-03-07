@@ -178,9 +178,20 @@ def admin_stats(request):
     for department in departments:
         registrations_by_department[department] = TalkRegistration.objects.filter(department=department).count()
 
+    registrations_by_year = dict()
+    for year in range(1, 6):
+        if year == 5:
+            key = '졸업생'
+        else:
+            key = '{}학년'.format(year)
+        registrations_by_year[key] = TalkRegistration.objects.filter(year=year).count()
+
+
+
     return render(request, 'gugugu/admin-stats.html', {
         'stats': stats,
         'registrations_by_department': registrations_by_department,
+        'registrations_by_year': registrations_by_year,
         'd_by_claps_received': claps_received,
         'd_by_claps_sent': claps_sent,
         'd_by_characters_sent': characters_sent,
