@@ -23,6 +23,9 @@ urlpatterns = [
     path('gu/sg-admin/stats', views.admin_stats, name='admin_stats'),
     path('gu/sg-admin/questions-claps', views.admin_questions_claps, name='admin_claps'),
     path('gu/sg-admin/questions-time', views.admin_questions_time, name='admin_time'),
+    path('gu/sg-admin/popular', views.admin_popular, name='admin_popular'),
+    path('gu/sg-admin/clapper', views.admin_clapper, name='admin_clapper'),
+    path('gu/sg-admin/typer', views.admin_typer, name='admin_typer'),
 
     path('', include('social_django.urls', namespace='social')),
 ]

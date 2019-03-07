@@ -187,6 +187,60 @@ def admin_stats(request):
     })
 
 
+def admin_clapper(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            claps_sent=reg.claps_sent(),
+        ))
+
+    # sorted TalkRegistration dicts
+    claps_sent = sorted(reg_dicts, key=lambda d: d['claps_sent'], reverse=True)
+
+    return render(request, 'gugugu/admin-clapper.html', {
+        'd_by_claps_sent': claps_sent,
+    })
+
+
+def admin_popular(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            claps_received=reg.claps_received(),
+        ))
+
+    # sorted TalkRegistration dicts
+    claps_received = sorted(reg_dicts, key=lambda d: d['claps_received'], reverse=True)
+
+    return render(request, 'gugugu/admin-popular.html', {
+        'd_by_claps_received': claps_received,
+    })
+
+
+def admin_typer(request):
+    regs = list(TalkRegistration.objects.all())
+
+    reg_dicts = list()
+    for reg in regs:
+        reg_dicts.append(dict(
+            registration=reg,
+            characters_sent=reg.characters_sent(),
+        ))
+
+    # sorted TalkRegistration dicts
+    characters_sent = sorted(reg_dicts, key=lambda d: d['characters_sent'], reverse=True)
+
+    return render(request, 'gugugu/admin-typer.html', {
+        'd_by_characters_sent': characters_sent,
+    })
+
+
 def admin_questions_claps(request):
     sg_room = Room.objects.all().get(name='sg-talk')
     messages = Message.objects.all().filter(room=sg_room).annotate(clap_count=Count('claps')).order_by('-clap_count')
