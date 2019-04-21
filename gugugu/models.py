@@ -12,9 +12,12 @@ import pandas as pd
 
 class Comment(models.Model):
     date = models.DateTimeField(_('Date'), auto_now_add=True, editable=False)
-    nickname = models.TextField(_('Nickname'))
-    content = models.TextField(_('Content'))
+    nickname = models.TextField(_('Nickname'), max_length=50)
+    content = models.TextField(_('Content'), max_length=500)
     likes = models.IntegerField(_('Likes'), default=0)
+
+    def __str__(self):
+        return self.nickname[:50]
 
 
 class Room(models.Model):
